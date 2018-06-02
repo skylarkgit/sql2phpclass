@@ -3,14 +3,20 @@ from phpTemplates import *
 from dtfParser import *
 from phpTools import *
 
-[data,type]=dtfParse("tables.dtf")
+print("Parsing.........")
+
+data=dtfParse("table.dtf")
+
+print("Finished Parsing")
 
 phpStr="<?php\n"
 
 for a in data:
 	str="class "+a+" implements dbconn{\n";
+	str+=getDeclarations(data[a])
 	str+=getConstructor(data[a])
-	str+=getAddFunction(a,data[a])
+	str+=getNulledConstructor(data[a])
+	str+=getAddFunction(data[a])
 	str+="}\n"
 	print(str)
 	phpStr+=str+"\n"
