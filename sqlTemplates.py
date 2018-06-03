@@ -11,6 +11,15 @@ def getAndClause(varList):
 			clause.append(d+"=:"+d)
 	return " AND ".join(clause)
 
+def getEqualClause(varList):
+	clause=[]
+	for d in varList:
+		if clause==[]:
+			clause=[d+"=:"+d]
+		else:
+			clause.append(d+"=:"+d)
+	return " AND ".join(clause)
+	
 def getWhereClause(clause):
 	return whereTemplate.replace("~",clause)
 	
