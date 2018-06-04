@@ -35,12 +35,49 @@ def getBindings(paramList):
 def getDeclarations(tableSurface):
 	varList=tableSurface.getVars();
 	return "public $"+";public $".join(varList)+";\n";
-
-def getSelectById(tableSurface):
-	tableName=tableSurface.name
-	varList=tableSurface.getVars()
-	return getSelectQuery(tableName,varList)+getWhereClause(getEqualClause(tableSurface.getKeys()))
 	
+def getSelectLocalByIdFunction(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getKeys()
+	str="function getLocalById("+getArgs(varList)+"){\n"
+	str+=getArgsToLocal(varList)
+	str+=getPrepare(getSelectById(tableSurface))
+	str+=getBindings(varList)
+	str+=getExec(tableName+" : SELECT LOCAL BY ID")
+	str+="$retObj"+fetchObj
+	str+=returnSuccess
+	str+="}\n"
+	return str
+	
+def getUpdateByIdFunction(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getKeys()
+	allSettables=tableSurface.getSettable()
+	str="function getUpdateById("+getArgs(varList)+"){\n"
+	str+=getArgsToLocal(varList)
+	str+=getArgsToLocal(allSettables)
+	str+=getPrepare(getUpdateById(tableName,allSettables,varList))
+	str+=getBindings(varList)
+	str+=getBindings(allSettables)
+	str+=getExec(tableName+" : SELECT LOCAL BY ID")
+	str+="$retObj"+fetchObj
+	str+=returnSuccess
+	str+="}\n"
+	return str
+
+def getSelectGlobalByIdFunction(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getKeys()
+	str="function getGlobalById("+getArgs(varList)+"){\n"
+	str+=getArgsToLocal(varList)
+	str+=getPrepare(getSelectById(tableSurface))
+	str+=getBindings(varList)
+	str+=getExec(tableName+" : SELECT GLOBAL BY ID")
+	str+="$retObj"+fetchObj
+	str+=returnSuccess
+	str+="}\n"
+	return str
+
 def getSelectByIdFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getKeys()

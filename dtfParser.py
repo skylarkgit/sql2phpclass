@@ -21,7 +21,13 @@ class Table:
 		keySet={}
 		for v in self.varList:
 			if v.isKey==True and v.keyType=="PRI":
-				keySet[v.name]=v.type
+				keySet[v.name]=v
+		return keySet
+	def getForiegnKeys(self):
+		keySet={}
+		for v in self.varList:
+			if v.isKey==True and v.keyType=="FOR":
+				keySet[v.name]=v
 		return keySet
 	def getAutoKey(self):
 		autoKey=None
@@ -33,14 +39,22 @@ class Table:
 		settables={}
 		for v in self.varList:
 			if v.isAUTO==False:
-				settables[v.name]=v.type
+				settables[v.name]=v
 		return settables
 	def getVars(self):
 		varl={}
 		for v in self.varList:
-			varl[v.name]=v.type
+			varl[v.name]=v
 		return varl
-				
+
+def unifyKeys(keySet1,keySet2):
+	newSet={}
+	for v in keySet1:
+		newSet[v.name]=v
+	for v in keySet2:
+		newSet[v.name]=v
+	return newSet
+		
 def dtfParse(fName):
 	data={}
 	f = open(fName,'r')

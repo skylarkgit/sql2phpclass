@@ -1,24 +1,30 @@
 insertTemplate		=	"INSERT INTO ~ (@) VALUES (^)"
+updateTemplate		=	"UPDATE ~ SET @"
 selectTemplate		=	"SELECT ~ FROM @"
+joinTemplate			=	" ~ INNER JOIN @ ON"
 whereTemplate		=	" WHERE ~"
 
-def getAndClause(varList):
-	clause=[]
+def getEqualList(varList):
+	el=[]
 	for d in varList:
-		if clause==[]:
-			clause=[d+"=:"+d]
+		if el==[]:
+			el=[d+"=:"+d]
 		else:
-			clause.append(d+"=:"+d)
-	return " AND ".join(clause)
+			el.append(d+"=:"+d)
+	return el
+	
+def getAndClause(varList):
+	return " "+" AND ".join(getEqualList(varList))
 
 def getEqualClause(varList):
-	clause=[]
-	for d in varList:
-		if clause==[]:
-			clause=[d+"=:"+d]
-		else:
-			clause.append(d+"=:"+d)
-	return " AND ".join(clause)
+	return " "+" AND ".join(getEqualList(varList))
+
+def getJoinClause(table1,table2):
+	clause=joinTemplate.replace('~',table1)
+	return clause.replace('@',table2)
+
+def getJoinSelect(varList,table1,table2,clause):
+	return getSelectQuery(getJoinClause(table1,table2),varList)+clause
 	
 def getWhereClause(clause):
 	return whereTemplate.replace("~",clause)
@@ -34,3 +40,21 @@ def getSelectQuery(tableName,varList):
 	sQry=sQry.replace('~',",".join(varList))
 	return sQry
 	
+def getUpdateQuery(tableName,varList,clause):
+	uQry=updateTemplate.replace('~',tableName)
+	uQry=uQry.replace('@',",".join(getEqualList(varList)))+clause
+	return uQry
+	
+def getSelectById(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getVars()
+	return getSelectQuery(tableName,varList)+getWhereClause(getEqualClause(tableSurface.getKeys()))
+
+def getGlobalById(tableSurface,globalSpace):
+	tableName=tableSurface.name
+	varList=tableSurface.getVars()
+	forKeys=tableSurface.getForiegnKeys()
+	return getJoinSelect(varList,table1,table2,getAndClause(key))
+
+def getUpdateById(tableName,varList,clauseVar):
+	return getUpdateQuery(tableName,varList,getWhereClause(getEqualClause(clauseVar)))

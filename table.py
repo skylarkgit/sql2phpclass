@@ -17,7 +17,8 @@ for a in data:
 	str+=getConstructor(data[a])
 	str+=getNulledConstructor(data[a])
 	str+=getAddFunction(data[a])
-	str+=getSelectByIdFunction(data[a])
+	str+=getSelectLocalByIdFunction(data[a])
+	str+=getUpdateByIdFunction(data[a])
 	str+="}\n"
 	print(str)
 	phpStr+=str+"\n"
