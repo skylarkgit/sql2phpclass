@@ -8,6 +8,11 @@ execTemplate		=	"if($stmt->execute()==false) {\n$this->errorLog($stmt->errorInfo
 lastInsertId			=	"=$this->db->lastInsertId();\n"
 fetchObj				=	"=$stmt->fetch(PDO::FETCH_OBJ);\n"
 returnSuccess		=	"return new RESPONSE($retObj,'SUCCESS','OK');\n"
+requireOnce			=	"require_once('~');\n"
+
+def getRequireOnce(fname):
+	return requireOnce.replace('~',fname)
+
 def getBind(inQry,outQry):
 	return bindTemplate.replace("~",inQry).replace("@",outQry)
 
@@ -22,6 +27,9 @@ def getPrepare(varQ):
 	
 def getArgs(varList):
 	return "$p"+",$p".join(varList)
+
+def getNulledArgs(varList):
+	return "$p"+"=NULL,$p".join(varList)+"=NULL"	
 	
 def getExec(varMsg):
 	return execTemplate.replace("~",varMsg)
@@ -119,7 +127,7 @@ def getAddFunction(tableSurface):
 
 def getConstructor(tableSurface):
 	varList=tableSurface.getSettable()
-	str="function __construct("+getArgs(varList)
+	str="function __construct("+getNulledArgs(varList)
 	str+="){\n"
 	for d in varList:
 		str+=("$this->"+d+"=$p"+d+";")
