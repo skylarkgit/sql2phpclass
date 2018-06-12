@@ -2,144 +2,62 @@
 from dtfParser import *
 from sqlTemplates import *
 
-prepareTemplate	=	"$stmt=$this->db->prepare('~');\n"
-bindTemplate			=	"$stmt->bindParam(':~',$@);\n"
-execTemplate		=	"if($stmt->execute()==false) {\n$this->errorLog($stmt->errorInfo()[2]);\nreturn new RESPONSE(null,'~','ERROR');\n}\n"
-lastInsertId			=	"=$this->db->lastInsertId();\n"
-fetchObj				=	"=$stmt->fetch(PDO::FETCH_OBJ);\n"
+prepareTemplate		=	"$stmt=$this->db->prepare('{}');\n"
+bindTemplate		=	"$stmt->bindParam(':{}',${});\n"
+execTemplate		=	"if($stmt->execute()==false) {{\n$this->errorLog($stmt->errorInfo()[2]);\nreturn new RESPONSE(null,'{}','ERROR');\n}}\n"
+lastInsertId		=	"$this->db->lastInsertId();\n"
+fetchObj			=	"$stmt->fetch(PDO::FETCH_OBJ);\n"
 returnSuccess		=	"return new RESPONSE($retObj,'SUCCESS','OK');\n"
-requireOnce			=	"require_once('~');\n"
+returnInvalid		=	"return new RESPONSE('BAD-{}','INVALID','ERROR');\n"
+requireOnce			=	"require_once('{}');\n"
+ifTemplate			=	"if({}) {}\n"
+elseTemplate		=	"else {}}\n"
+elseifTemplate		=	"elseif({}) @\n"
+functionTemplate	=	"function {}({}){{\n{}}}\n"
+strlenTemplate		=	"strlen(''.{})"
+strInRangeTemplate	=	"strInRange({},{},{})"
+equalityTemplate	=	"({}=={})"
+validateTemplate	=	"validate({},'{}')"
 
-def getRequireOnce(fname):
-	return requireOnce.replace('~',fname)
+def VALIDATE(var,varclass):
+	return validateTemplate.format(var,varclass)
 
-def getBind(inQry,outQry):
-	return bindTemplate.replace("~",inQry).replace("@",outQry)
+def IF(cond,do):
+	return ifTemplate.format(cond,do)
 
-def getArgsToLocal(varList):
-	str=""
-	for d in varList:
-		str+=("$this->"+d+"=$p"+d+";")
-	return str+"\n"
+def ISEQUAL(va,vb):
+	return equalityTemplate.format(va,vb)
+
+def STRLEN(varname):
+	return strlenTemplate.format(varname)
+
+def INVALID(reason):
+	return returnInvalid.format(reason)
+
+def REQUIRE_ONCE(fname):
+	return requireOnce.format(fname)
+	
+def POST(varname):
+	return "$_POST['"+var.name+"']"
 		
-def getPrepare(varQ):
-	return prepareTemplate.replace("~",varQ)
-	
-def getArgs(varList):
-	return "$p"+",$p".join(varList)
+def FUNCTION(name,args,body):
+	return functionTemplate.format(name,args,body)
 
-def getNulledArgs(varList):
-	return "$p"+"=NULL,$p".join(varList)+"=NULL"	
-	
-def getExec(varMsg):
-	return execTemplate.replace("~",varMsg)
+def THIS(varname):
+	return "$this->"+varname
 
-def getBindings(paramList):
-	bindings="";
-	for p in paramList:
-		bindings+=getBind(p,"this->"+p)
-	return bindings
+def BIND(inQry,outQry):
+	return bindTemplate.format(inQry,outQry)
 
-def getDeclarations(tableSurface):
-	varList=tableSurface.getVars();
-	return "public $"+";public $".join(varList)+";\n";
+def EXEC(varMsg):
+	return execTemplate.format(varMsg)
 	
-def getSelectLocalByIdFunction(tableSurface):
-	tableName=tableSurface.name
-	varList=tableSurface.getKeys()
-	str="function getLocalById("+getArgs(varList)+"){\n"
-	str+=getArgsToLocal(varList)
-	str+=getPrepare(getSelectById(tableSurface))
-	str+=getBindings(varList)
-	str+=getExec(tableName+" : SELECT LOCAL BY ID")
-	str+="$retObj"+fetchObj
-	str+=returnSuccess
-	str+="}\n"
-	return str
-	
-def getUpdateByIdFunction(tableSurface):
-	tableName=tableSurface.name
-	varList=tableSurface.getKeys()
-	allSettables=tableSurface.getSettable()
-	str="function getUpdateById("+getArgs(varList)+"){\n"
-	str+=getArgsToLocal(varList)
-	str+=getArgsToLocal(allSettables)
-	str+=getPrepare(getUpdateById(tableName,allSettables,varList))
-	str+=getBindings(varList)
-	str+=getBindings(allSettables)
-	str+=getExec(tableName+" : SELECT LOCAL BY ID")
-	str+="$retObj"+fetchObj
-	str+=returnSuccess
-	str+="}\n"
-	return str
+def PREPARE(varQ):
+	return prepareTemplate.format(varQ)
 
-def getSelectGlobalByIdFunction(tableSurface):
-	tableName=tableSurface.name
-	varList=tableSurface.getKeys()
-	str="function getGlobalById("+getArgs(varList)+"){\n"
-	str+=getArgsToLocal(varList)
-	str+=getPrepare(getSelectById(tableSurface))
-	str+=getBindings(varList)
-	str+=getExec(tableName+" : SELECT GLOBAL BY ID")
-	str+="$retObj"+fetchObj
-	str+=returnSuccess
-	str+="}\n"
-	return str
+def VAR(varname):
+	return "$"+varname;
 
-def getSelectByIdFunction(tableSurface):
-	tableName=tableSurface.name
-	varList=tableSurface.getKeys()
-	str="function getLocalById("+getArgs(varList)+"){\n"
-	str+=getArgsToLocal(varList)
-	str+=getPrepare(getSelectById(tableSurface))
-	str+=getBindings(varList)
-	str+=getExec(tableName+" : SELECT LOCAL BY ID")
-	str+="$retObj"+fetchObj
-	str+=returnSuccess
-	str+="}\n"
-	return str
-	
-def getAddFunction(tableSurface):
-	tableName=tableSurface.name
-	varList=tableSurface.getSettable()
-	str="function add(){\n"
-	str+=getPrepare(getInsertQuery(tableName,varList))
-	str+=getBindings(varList)
-	str+=getExec(tableName+" : INSERT")
-	str+="$retObj=NULL;\n"
-	key=tableSurface.getAutoKey()
-	allKeys=tableSurface.getKeys()
-	if key!=None:
-		str+="$this->"+key+lastInsertId;
-		str+=getPrepare(getSelectQuery(tableName,[key]))
-		str+=getBindings([key])
-		str+=getExec(tableName+" : SELECT AUTO")
-		str+="$retObj"+fetchObj
-	elif len(allKeys)>0:
-		str+=getPrepare(getSelectQuery(tableName,allKeys))
-		str+=getBindings(allKeys)
-		str+=getExec(tableName+" : SELECT PRIME")
-		str+="$retObj"+fetchObj
-	str+=returnSuccess
-	#str+="$"getLastInserted()
-	str+="}\n"
-	return str
-
-def getConstructor(tableSurface):
-	varList=tableSurface.getSettable()
-	str="function __construct("+getNulledArgs(varList)
-	str+="){\n"
-	for d in varList:
-		str+=("$this->"+d+"=$p"+d+";")
-	str+="\n}\n"
-	return str
-	
-def getNulledConstructor(tableSurface):
-	varList=tableSurface.getVars()
-	str="function __construct(){\n"
-	str+="$this->"+"=NULL;$this->".join(varList)+"=NULL;"
-	str+="\n}\n"
-	return str
-	
+def LENCHECK(varname,minl,maxl):
+	return strInRangeTemplate.format(varname,minl,maxl);
 #-------------
-

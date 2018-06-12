@@ -1,11 +1,20 @@
+import csv
+
 class Column:
-	def __init__(self, name, type, keyType=None, keyReference=None):
+	def __init__(self, name, type, keyType, keyReference,validType,lengthConstraint):
 		self.name=name
+		self.alias=name
 		self.type=type
-		self.isKey=(keyType!=None and keyType!="AUTO")
+		self.isKey=(keyType!="" and keyType!="AUTO")
 		self.keyType=keyType
 		self.isAUTO=(keyType=="AUTO" or keyReference=="AUTO")
 		#print("name="+name+" keyType="+str(keyType)+" keyReference="+str(keyReference))
+		self.validType=validType
+		self.lenConstraint=(lengthConstraint!="")
+		if(self.lenConstraint==True):
+			lens=lengthConstraint.split("-")
+			self.minLen=lens[0]
+			self.maxLen=lens[1]
 		self.keyReference=keyReference
 
 class Table:
@@ -56,20 +65,19 @@ def unifyKeys(keySet1,keySet2):
 	return newSet
 		
 def dtfParse(fName):
+	rows=[]
+	with open(fName, 'r') as csvfile:
+		csvreader = csv.reader(csvfile)
+		for row in csvreader:
+			rows.append(row)
 	data={}
-	f = open(fName,'r')
-	l=f.readline()
-	while l:
-		l=l.split(" ")
-		l.append(None);l.append(None)
-		print(l[1])
+	for l in rows:
+		print(",".join(l))
 		if l[0] in data:
-			data[l[0]].append(Column(l[1],l[2],l[3],l[4]))
+			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7]))
 		else:
 			data[l[0]]=Table(l[0])
-			data[l[0]].append(Column(l[1],l[2],l[3],l[4]))
-		l=f.readline()
-	f.close()
+			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7]))
 	return data
 	
 #def trimAUTO(varList,isAUTO):

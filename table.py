@@ -1,24 +1,31 @@
+import sys
 import numpy as np
 from phpTemplates import *
 from dtfParser import *
 from phpTools import *
+from builder import *
 
 print("Parsing.........")
 
-data=dtfParse("table.dtf")
+tableSurfaces=dtfParse("table.dtf")
 
 print("Finished Parsing")
 
-phpStr="<?php\n"
+#sys.exit()
+#CRUD
 
-for a in data:
-	str="class "+a+" implements dbconn{\n";
-	str+=getDeclarations(data[a])
-	str+=getConstructor(data[a])
-	str+=getNulledConstructor(data[a])
-	str+=getAddFunction(data[a])
-	str+=getSelectLocalByIdFunction(data[a])
-	str+=getUpdateByIdFunction(data[a])
+phpStr="<?php\n"
+phpStr+=REQUIRE_ONCE("dbconn.php")
+phpStr+=REQUIRE_ONCE("toolbag.php")
+for a in tableSurfaces:
+	str="class "+a+" extends dbconn{\n";
+	str+=getDeclarations(tableSurfaces[a])
+	str+=getConstructor(tableSurfaces[a])
+	#str+=getNulledConstructor(tableSurfaces[a])
+	str+=getAddFunction(tableSurfaces[a])
+	str+=getSelectLocalByIdFunction(tableSurfaces[a])
+	str+=getUpdateByIdFunction(tableSurfaces[a])
+	str+=getPostArgsFunction(tableSurfaces[a])
 	str+="}\n"
 	print(str)
 	phpStr+=str+"\n"

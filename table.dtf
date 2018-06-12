@@ -1,86 +1,86 @@
-address street varchar 
-address city varchar 
-address state varchar 
-address PIN int 
-address addrid bigint PRI AUTO 
-bill chartId bigint FOR charts
-bill exchangeId bigint FOR exchange
-bill billId bigint PRI AUTO 
-categories name varchar UNI
-categories categoryId bigint PRI AUTO 
-charts availId bigint FOR serviceavailed
-charts sessionId bigint FOR session
-charts status varchar 
-charts exchangeId bigint FOR exchange
-charts chartId bigint PRI AUTO 
-contact email varchar MUL 
-contact phone1 varchar 
-contact phone2 varchar 
-contact contactId bigint PRI AUTO 
-doctors userId bigint FOR users 
-doctors profileId bigint FOR profiles 
-doctors doctorId bigint PRI AUTO 
-employees userId bigint FOR users 
-employees profileId bigint FOR profiles 
-employees empId bigint PRI AUTO 
-exchange type varchar 
-exchange amount float 
-exchange discount float 
-exchange discountType char 
-exchange exchangeId bigint PRI AUTO 
-exchange net float 
-expenditures expenseId bigint FOR expenses 
-expenditures exchangeId bigint FOR exchange 
-expenditures expenditureId bigint PRI AUTO 
-expenses name varchar 
-expenses cost double 
-expenses expenseId bigint PRI AUTO 
-groups groupName varchar UNI 
-groups groupId bigint PRI AUTO 
-lab serviceId bigint FOR service 
-lab paramId bigint FOR params 
-lab cost double 
-lab labId bigint PRI AUTO 
-params paramId bigint PRI AUTO 
-params paramString varchar 
-patientgroups groupId bigint FOR groups 
-patientgroups patientId bigint FOR patients 
-patients userId bigint FOR users 
-patients patientId bigint PRI AUTO 
-personalinfo name varchar 
-personalinfo gender varchar 
-personalinfo bloodGroup varchar 
-personalinfo dob date 
-personalinfo aadhar bigint UNI 
-personalinfo infoId bigint PRI AUTO 
-profiles type char 
-profiles name varchar UNI 
-profiles description varchar 
-profiles profileId bigint PRI AUTO 
-service name varchar 
-service cost float 
-service description varchar 
-service categoryId bigint FOR categories 
-service serviceId bigint PRI AUTO 
-serviceavailed patientId bigint FOR patients 
-serviceavailed serviceId bigint FOR service 
-serviceavailed exchangeId bigint FOR exchange 
-serviceavailed taxId bigint FOR taxes 
-serviceavailed availId bigint PRI AUTO 
-servicecategories name varchar 
-servicecategories categoryId bigint PRI AUTO 
-session timeStamp timestamp 
-session dateAndTime datetime 
-session duration time 
-session sessionId bigint PRI AUTO 
-taxes taxName varchar UNI 
-taxes percent float 
-taxes taxId bigint PRI AUTO 
-transactions type char 
-transactions status varchar 
-transactions exchangeId bigint FOR exchange 
-transactions txnId bigint PRI AUTO 
-users infoId bigint FOR peresonalInfo 
-users contactId bigint FOR contact 
-users addrId bigint FOR address 
-users userId bigint PRI AUTO 
+address,street,street,varchar,,,string,1-50
+address,city,city,varchar,,,string,1-50
+address,state,state,varchar,,,string,1-50
+address,PIN,PIN,int,,,number,6-6
+address,addrid,addrid,bigint,PRI,AUTO,number,
+bill,chartId,chartId,bigint,FOR,charts,number,
+bill,exchangeId,exchangeId,bigint,FOR,exchange,number,
+bill,billId,billId,bigint,PRI,AUTO,number,
+categories,name,name,varchar,UNI,,name,
+categories,categoryId,categoryId,bigint,PRI,AUTO,number,
+charts,availId,availId,bigint,FOR,serviceavailed,number,
+charts,sessionId,sessionId,bigint,FOR,session,number,
+charts,status,status,varchar,,,string,
+charts,exchangeId,exchangeId,bigint,FOR,exchange,number,
+charts,chartId,chartId,bigint,PRI,AUTO,number,
+contact,email,email,varchar,MUL,,email,
+contact,phone1,phone1,varchar,,,phone,
+contact,phone2,phone2,varchar,,,phone,
+contact,contactId,contactId,bigint,PRI,AUTO,number,
+doctors,userId,userId,bigint,FOR,users,number,
+doctors,profileId,profileId,bigint,FOR,profiles,number,
+doctors,doctorId,doctorId,bigint,PRI,AUTO,number,
+employees,userId,userId,bigint,FOR,users,number,
+employees,profileId,profileId,bigint,FOR,profiles,number,
+employees,empId,empId,bigint,PRI,AUTO,number,
+exchange,type,type,varchar,,,string,
+exchange,amount,amount,float,,,float,
+exchange,discount,discount,float,,,percent,
+exchange,discountType,discountType,char,,,string,
+exchange,exchangeId,exchangeId,bigint,PRI,AUTO,number,
+exchange,net,net,float,,,float,
+expenditures,expenseId,expenseId,bigint,FOR,expenses,number,
+expenditures,exchangeId,exchangeId,bigint,FOR,exchange,number,
+expenditures,expenditureId,expenditureId,bigint,PRI,AUTO,number,
+expenses,name,name,varchar,,,string,
+expenses,cost,cost,double,,,float,
+expenses,expenseId,expenseId,bigint,PRI,AUTO,number,
+groups,groupName,groupName,varchar,UNI,,string,
+groups,groupId,groupId,bigint,PRI,AUTO,number,
+lab,serviceId,serviceId,bigint,FOR,service,number,
+lab,paramId,paramId,bigint,FOR,params,number,
+lab,cost,cost,double,,,float,
+lab,labId,labId,bigint,PRI,AUTO,number,
+params,paramId,paramId,bigint,PRI,AUTO,number,
+params,paramString,paramString,varchar,,,params,
+patientgroups,groupId,groupId,bigint,FOR,groups,number,
+patientgroups,patientId,patientId,bigint,FOR,patients,number,
+patients,userId,userId,bigint,FOR,users,number,
+patients,patientId,patientId,bigint,PRI,AUTO,number,
+personalinfo,name,name,varchar,,,string,
+personalinfo,gender,gender,varchar,,,string,
+personalinfo,bloodGroup,bloodGroup,varchar,,,code,
+personalinfo,dob,dob,date,,,date,
+personalinfo,aadhar,aadhar,bigint,UNI,,number,12-12
+personalinfo,infoId,infoId,bigint,PRI,AUTO,number,
+profiles,type,type,char,,,string,
+profiles,name,name,varchar,UNI,,string,
+profiles,description,description,varchar,,,string,
+profiles,profileId,profileId,bigint,PRI,AUTO,number,
+service,name,name,varchar,,,string,
+service,cost,cost,float,,,float,
+service,description,description,varchar,,,string,
+service,categoryId,categoryId,bigint,FOR,categories,number,
+service,serviceId,bigint,bigint,PRI,AUTO,number,
+serviceavailed,patientId,patientId,bigint,FOR,patients,number,
+serviceavailed,serviceId,serviceId,bigint,FOR,service,number,
+serviceavailed,exchangeId,exchangeId,bigint,FOR,exchange,number,
+serviceavailed,taxId,taxId,bigint,FOR,taxes,number,
+serviceavailed,availId,availId,bigint,PRI,AUTO,number,
+servicecategories,name,name,varchar,,,string,
+servicecategories,categoryId,categoryId,bigint,PRI,AUTO,number,
+session,tStamp,tStamp,timestamp,,,timestamp,
+session,dateAndTime,dateAndTime,datetime,,,datetime,
+session,duration,duration,time,,,time,
+session,sessionId,sessionId,bigint,PRI,AUTO,number,
+taxes,taxName,taxName,varchar,UNI,,string,
+taxes,percent,percent,float,,,percent,
+taxes,taxId,taxId,bigint,PRI,AUTO,number,
+transactions,type,type,char,,,string,
+transactions,status,status,varchar,,,string,
+transactions,exchangeId,exchangeId,bigint,FOR,exchange,number,
+transactions,txnId,txnId,bigint,PRI,AUTO,number,
+users,infoId,infoId,bigint,FOR,peresonalInfo,number,
+users,contactId,contactId,bigint,FOR,contact,number,
+users,addrId,addrId,bigint,FOR,address,number,
+users,userId,userId,bigint,PRI,AUTO,number,
