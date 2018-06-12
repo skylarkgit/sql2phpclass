@@ -17,7 +17,7 @@ def getValidations(varlist):
 	return str
 
 def lenCheck(var):
-	return LENCHECK(var.name,var.minLen,var.maxLen)
+	return LENCHECK(THIS(var.name),var.minLen,var.maxLen)
 
 def getArgsToLocal(varList):
 	str=""
