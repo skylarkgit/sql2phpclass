@@ -11,7 +11,7 @@ def getNulledConstructor(tableSurface):
 	varList=tableSurface.getVars()
 	str="function __construct(){\n"
 	return FUNCTION("__construct",""," ".join(THIS(var)+"=NULL;" for var in varList)+"\n");
-	
+
 def getConstructor(tableSurface):
 	varList=tableSurface.getSettable()
 	str=""
@@ -47,6 +47,7 @@ def getSelectByIdFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getKeys()
 	str=getArgsToLocal(varList)
+	str+=getValidations(varList)
 	str+=PREPARE(getSelectById(tableSurface))
 	str+=getBindings(varList)
 	str+=EXEC(tableName+" : SELECT LOCAL BY ID")
@@ -54,20 +55,20 @@ def getSelectByIdFunction(tableSurface):
 	str+=returnSuccess
 	return str
 	return FUNCTION("getLocalById",getArgs(varList),str)
-	
+
 def getUpdateByIdFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getKeys()
 	allSettables=tableSurface.getSettable()
-	str=getArgsToLocal(varList)
-	str+=getArgsToLocal(allSettables)
+	str=getValidations(varList)
+	str+=getValidations(allSettables)
 	str+=PREPARE(getUpdateById(tableName,allSettables,varList))
 	str+=getBindings(varList)
 	str+=getBindings(allSettables)
 	str+=EXEC(tableName+" : UPDATE LOCAL BY ID")
 	str+="$retObj"+"="+fetchObj
 	str+=returnSuccess
-	return FUNCTION("getUpdateById",getArgs(varList),str)
+	return FUNCTION("getUpdateById","",str)
 
 def getSelectLocalByIdFunction(tableSurface):
 	tableName=tableSurface.name

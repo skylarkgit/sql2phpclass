@@ -18,9 +18,13 @@ strlenTemplate		=	"strlen(''.{})"
 strInRangeTemplate	=	"strInRange({},{},{})"
 equalityTemplate	=	"({}=={})"
 validateTemplate	=	"validate({},'{}')"
+sanitizeTemplate	=	"sanitize({},'{}');\n"
 
 def VALIDATE(var,varclass):
 	return validateTemplate.format(var,varclass)
+
+def SANITIZE(var,varclass):
+	return sanitizeTemplate.format(var,varclass)
 
 def IF(cond,do):
 	return ifTemplate.format(cond,do)
@@ -36,10 +40,10 @@ def INVALID(reason):
 
 def REQUIRE_ONCE(fname):
 	return requireOnce.format(fname)
-	
+
 def POST(varname):
 	return "$_POST['"+var.name+"']"
-		
+
 def FUNCTION(name,args,body):
 	return functionTemplate.format(name,args,body)
 
@@ -51,7 +55,7 @@ def BIND(inQry,outQry):
 
 def EXEC(varMsg):
 	return execTemplate.format(varMsg)
-	
+
 def PREPARE(varQ):
 	return prepareTemplate.format(varQ)
 
