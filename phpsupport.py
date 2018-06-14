@@ -44,10 +44,10 @@ def getBindings(paramList):
 
 def getDeclarations(tableSurface):
 	varList=tableSurface.getVars();
-	return "public $"+";public $".join(varList)+";\n";
+	return "".join("public "+VAR(x)+";" for x in varList)+"\n";
 
 def getArgs(varList):
-	return "$"+",$".join(varList)
+	return ",".join(VAR(x) for x in varList)
 
 def getNulledArgs(varList):
-	return "$"+"=NULL,$".join(varList)+"=NULL"
+	return ",".join(VAR(x)+"=NULL" for x in varList)
