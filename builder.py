@@ -80,3 +80,28 @@ def getSelectLocalByIdFunction(tableSurface):
 	str+="$retObj"+"="+fetchObj
 	str+=returnSuccess
 	return FUNCTION("getLocalById",getArgs(varList),str)
+
+def getForiegnAdd(var):
+	str=EQUAL(VAR("retObj"),CALLIN("Add::"+var.keyReference,""))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),ROLLBACK(VAR("db"))+RETURN(VAR('retObj')))
+	str+=EQUAL(POST(var.alias),MEMBER(VAR('retObj->data'),var.name))
+	return str+"\n"
+
+def getAdd(table):
+	str=EQUAL(VAR(table.name),"new "+CALLIN(table.name,""))
+	str+=MEMBER(VAR(table.name),SETDB(VAR('db')))
+	str+=MEMBER(VAR(table.name),CALL('initFromPost',""))
+	str+=EQUAL(VAR('retObj'),MEMBER(VAR(table.name),CALLIN('add',"")))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),ROLLBACK(VAR("db"))+RETURN(VAR('retObj')))
+	return str+"\n"
+
+def getAddAllFunction(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getForiegnKeys()
+	str="$db=createConnection();\n"
+	for v in varList:
+		str+=getForiegnAdd(varList[v])
+	str+=getAdd(tableSurface)
+	str+=COMMIT(VAR('db'))
+	str+=returnSuccess
+	return FUNCTION(tableName,"",str)

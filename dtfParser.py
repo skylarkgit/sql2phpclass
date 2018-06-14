@@ -5,9 +5,9 @@ class Column:
 		self.name=name
 		self.alias=name
 		self.type=type
-		self.isKey=(keyType!="" and keyType!="AUTO")
+		self.isKey=(keyType!="")
 		self.keyType=keyType
-		self.isAUTO=(keyType=="AUTO" or keyReference=="AUTO")
+		self.isAUTO=(keyReference=="AUTO")
 		#print("name="+name+" keyType="+str(keyType)+" keyReference="+str(keyReference))
 		self.validType=validType
 		self.lenConstraint=(lengthConstraint!="")
@@ -63,7 +63,7 @@ def unifyKeys(keySet1,keySet2):
 	for v in keySet2:
 		newSet[v.name]=v
 	return newSet
-		
+
 def dtfParse(fName):
 	rows=[]
 	with open(fName, 'r') as csvfile:
@@ -79,7 +79,6 @@ def dtfParse(fName):
 			data[l[0]]=Table(l[0])
 			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7]))
 	return data
-	
+
 #def trimAUTO(varList,isAUTO):
 #	for i in range(len(isAUTO))
-		

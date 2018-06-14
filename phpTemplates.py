@@ -2,23 +2,68 @@
 from dtfParser import *
 from sqlTemplates import *
 
-prepareTemplate		=	"$stmt=$this->db->prepare('{}');\n"
 bindTemplate		=	"$stmt->bindParam(':{}',${});\n"
+callTemplate		=	"{}({});\n"
+callinTemplate		=	"{}({})"
+classTemplate		=	"class {}{{\n{}}}\n"
+commitTemplate		=	"{}->commit();\n"
+equalTemplate		=	"{}={};\n"
 execTemplate		=	"if($stmt->execute()==false) {{\n$this->errorLog($stmt->errorInfo()[2]);\nreturn new RESPONSE(null,'{}','ERROR');\n}}\n"
-lastInsertId		=	"$this->db->lastInsertId();\n"
-fetchObj			=	"$stmt->fetch(PDO::FETCH_OBJ);\n"
-returnSuccess		=	"return new RESPONSE($retObj,'SUCCESS','OK');\n"
-returnInvalid		=	"return new RESPONSE('BAD-{}','INVALID','ERROR');\n"
-requireOnce			=	"require_once('{}');\n"
-ifTemplate			=	"if({}) {}\n"
 elseTemplate		=	"else {}}\n"
 elseifTemplate		=	"elseif({}) @\n"
+equalityTemplate	=	"({}=={})"
 functionTemplate	=	"function {}({}){{\n{}}}\n"
+fetchObj			=	"$stmt->fetch(PDO::FETCH_OBJ);\n"
+ifTemplate			=	"if({}) {{\n{}}}\n"
+lastInsertId		=	"$this->db->lastInsertId();\n"
+memberTemplate		=	"{}->{}"
+nonEqualityTemplate	=	"({}!={})"
+prepareTemplate		=	"$stmt=$this->db->prepare('{}');\n"
+phpTemplate			=	"<?php\n{}?>"
+returnSuccess		=	"return new RESPONSE($retObj,'SUCCESS','OK');\n"
+requireOnce			=	"require_once('{}');\n"
+responseTemplate	=	"new RESPONSE({},{},{})"
+returnInvalid		=	"return new RESPONSE('BAD-{}','INVALID','ERROR');\n"
+returnTemplate		=	"return {};\n"
+rollbackTemplate	=	"{}->rollback();\n"
+sanitizeTemplate	=	"sanitize({},'{}');\n"
+setdbTemplate		=	"setdb({});\n"
 strlenTemplate		=	"strlen(''.{})"
 strInRangeTemplate	=	"strInRange({},{},{})"
-equalityTemplate	=	"({}=={})"
 validateTemplate	=	"validate({},'{}')"
-sanitizeTemplate	=	"sanitize({},'{}');\n"
+
+def MEMBER(obj,mem):
+	return memberTemplate.format(obj,mem)
+
+def RETURN(response):
+	return returnTemplate.format(response)
+
+def RESOPNSE(response,msg,status):
+	return responseTemplate.format(response,msg,status)
+
+def CALL(var,var2):
+	return callTemplate.format(var,var2)
+
+def CALLIN(var,var2):
+	return callinTemplate.format(var,var2)
+
+def EQUAL(var,var2):
+	return equalTemplate.format(var,var2)
+
+def SETDB(var):
+	return setdbTemplate.format(var)
+
+def ROLLBACK(var):
+	return rollbackTemplate.format(var)
+
+def COMMIT(var):
+	return commitTemplate.format(var)
+
+def PHP(code):
+	return phpTemplate.format(code)
+
+def CLASS(classname,code):
+	return classTemplate.format(classname,code)
 
 def VALIDATE(var,varclass):
 	return validateTemplate.format(var,varclass)
@@ -32,6 +77,9 @@ def IF(cond,do):
 def ISEQUAL(va,vb):
 	return equalityTemplate.format(va,vb)
 
+def ISNOTEQUAL(va,vb):
+	return nonEqualityTemplate.format(va,vb)
+
 def STRLEN(varname):
 	return strlenTemplate.format(varname)
 
@@ -42,7 +90,7 @@ def REQUIRE_ONCE(fname):
 	return requireOnce.format(fname)
 
 def POST(varname):
-	return "$_POST['"+var.name+"']"
+	return "$_POST['"+varname+"']"
 
 def FUNCTION(name,args,body):
 	return functionTemplate.format(name,args,body)
