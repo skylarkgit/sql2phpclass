@@ -14,8 +14,7 @@ print("Finished Parsing")
 #sys.exit()
 #CRUD
 #CLASSES.php
-phpStr=REQUIRE_ONCE("dbconn.php")
-phpStr+=REQUIRE_ONCE("toolbag.php")
+phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")
 for a in tableSurfaces:
 	str=getDeclarations(tableSurfaces[a])
 	str+=getConstructor(tableSurfaces[a])
@@ -27,61 +26,32 @@ for a in tableSurfaces:
 	print(str)
 	phpStr+=CLASS(a+" extends dbconn",str)
 
-phpStr	=	PHP(phpStr)
-phpFile = 	open("classes.php", "w")
-phpFile.write(phpStr)
-phpFile.close()
-
-finalPhp=	beautify("classes.php")
-
-phpFile	= 	open("classes.php", "w")
-phpFile.write(finalPhp)
-phpFile.close()
+writePHP("classes.php",phpStr)
 
 #ADD.php
-phpStr=REQUIRE_ONCE("dbconn.php")
-phpStr+=REQUIRE_ONCE("toolbag.php")
-phpStr+=REQUIRE_ONCE("classes.php")
-phpStr+=REQUIRE_ONCE("auth.php")
+phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
 fncs=""
 for a in tableSurfaces:
 	fncs+=getAddAllFunction(tableSurfaces[a])
-
 print(fncs)
-
 phpStr+=CLASS("Add",fncs)
-
-phpStr	=	PHP(phpStr)
-phpFile = 	open("add.php", "w")
-phpFile.write(phpStr)
-phpFile.close()
-
-finalPhp=	beautify("add.php")
-
-phpFile	= 	open("add.php", "w")
-phpFile.write(finalPhp)
-phpFile.close()
+writePHP("add.php",phpStr)
 
 #GET.php
-phpStr=REQUIRE_ONCE("dbconn.php")
-phpStr+=REQUIRE_ONCE("toolbag.php")
-phpStr+=REQUIRE_ONCE("classes.php")
-phpStr+=REQUIRE_ONCE("auth.php")
+phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
 fncs=""
 for a in tableSurfaces:
 	fncs+=getGetAllFunction(tableSurfaces[a])
-
 print(fncs)
-
 phpStr+=CLASS("Get",fncs)
+writePHP("get.php",phpStr)
 
-phpStr	=	PHP(phpStr)
-phpFile = 	open("get.php", "w")
-phpFile.write(phpStr)
-phpFile.close()
 
-finalPhp=	beautify("get.php")
-
-phpFile	= 	open("get.php", "w")
-phpFile.write(finalPhp)
-phpFile.close()
+#UPDATE.php
+phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
+fncs=""
+for a in tableSurfaces:
+	fncs+=getUpdateAllFunction(tableSurfaces[a])
+print(fncs)
+phpStr+=CLASS("Update",fncs)
+writePHP("update.php",phpStr)

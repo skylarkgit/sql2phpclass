@@ -140,3 +140,27 @@ def getGetAllFunction(tableSurface):
 	str+="$retObj=(object)$result;\n"
 	str+=returnSuccess
 	return FUNCTION(tableName,"$db,"+getArgs(keySet),str)
+
+def getForiegnUpdate(var):
+	str=EQUAL(VAR("retObj"),CALLIN("Update::"+var.keyReference,"$db"))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
+	str+=EQUAL(POST(var.alias),MEMBER(VAR('retObj->data'),var.alias))
+	return str+"\n"
+
+def getUpdate(table):
+	str=EQUAL(VAR(table.name),"new "+CALLIN(table.name,""))
+	str+=MEMBER(VAR(table.name),SETDB(VAR('db')))
+	str+=MEMBER(VAR(table.name),CALL('initFromPost',""))
+	str+=EQUAL(VAR('retObj'),MEMBER(VAR(table.name),CALLIN('updateLocalById',"")))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
+	return str+"\n"
+
+def getUpdateAllFunction(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getForiegnKeys()
+	str=""
+	for v in varList:
+		str+=getForiegnUpdate(varList[v])
+	str+=getUpdate(tableSurface)
+	str+=returnSuccess
+	return FUNCTION(tableName,"$db",str)

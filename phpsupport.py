@@ -51,3 +51,13 @@ def getArgs(varList):
 
 def getNulledArgs(varList):
 	return ",".join(VAR(x)+"=NULL" for x in varList)
+
+def writePHP(fname,code):
+	phpStr	=PHP(code)
+	phpFile =open(fname, "w")
+	phpFile.write(phpStr)
+	phpFile.close()
+	finalPhp=beautify(fname)
+	phpFile	=open(fname, "w")
+	phpFile.write(finalPhp)
+	phpFile.close()
