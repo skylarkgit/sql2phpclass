@@ -42,7 +42,7 @@ class Table:
 		autoKey=None
 		for v in self.varList:
 			if v.isKey and v.isAUTO:
-				autoKey=v.name
+				autoKey=v
 		return autoKey
 	def getSettable(self):
 		settables={}

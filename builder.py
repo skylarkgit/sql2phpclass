@@ -3,6 +3,12 @@ from sqlTemplates import *
 from phpTemplates import *
 from phpsupport import *
 
+def is_empty(struct):
+	if struct:
+		return False
+	else:
+		return True
+
 def getPostArgsFunction(tableSurface):
 	varList=tableSurface.getVars()
 	return FUNCTION("initFromPost","",localizeAliases(varList));
@@ -30,9 +36,9 @@ def getAddFunction(tableSurface):
 	key=tableSurface.getAutoKey()
 	allKeys=tableSurface.getKeys()
 	if key!=None:
-		str+="$this->"+key+"="+lastInsertId;
-		str+=PREPARE(getSelectQuery(tableName,[key]))
-		str+=getBindings([key])
+		str+="$this->"+key.name+"="+lastInsertId;
+		str+=PREPARE(getSelectQuery(tableName,{key.name:key}))
+		str+=getBindings({key.name:key})
 		str+=EXEC(tableName+" : SELECT AUTO")
 		str+="$retObj"+"="+fetchObj
 	elif len(allKeys)>0:
@@ -85,7 +91,7 @@ def getSelectByIdFunction(tableSurface):
 def getForiegnAdd(var):
 	str=EQUAL(VAR("retObj"),CALLIN("Add::"+var.keyReference,"$db"))
 	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
-	str+=EQUAL(POST(var.alias),MEMBER(VAR('retObj->data'),var.name))
+	str+=EQUAL(POST(var.alias),MEMBER(VAR('retObj->data'),var.alias))
 	return str+"\n"
 
 def getAdd(table):
@@ -106,17 +112,18 @@ def getAddAllFunction(tableSurface):
 	str+=returnSuccess
 	return FUNCTION(tableName,"$db",str)
 
-def getForiegnGet(var):
-	str=EQUAL(VAR("retObj"),CALLIN("Get::"+var.keyReference,"$db"))
-	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
-	str+=EQUAL(POST(var.alias),MEMBER(VAR('retObj->data'),var.name))
+def getForiegnGet(key):
+	str=EQUAL(VAR("retObjTwo"),CALLIN("Get::"+key.keyReference,"$db,$retObj->"+key.alias))
+	str+=IF(ISEQUAL(VAR("retObjTwo->status"),"'ERROR'"),RETURN(VAR('retObjTwo')))
+	str+=CALL('array_merge',"$result,(array)$retObjTwo->data")
 	return str+"\n"
 
 def getGet(table):
-	str=EQUAL(VAR(table.name),"new "+CALLIN(table.name,""))
+	keySet=table.getKeys()
+	str=getArgsToLocal(keySet)
+	str+=EQUAL(VAR(table.name),"new "+CALLIN(table.name,""))
 	str+=MEMBER(VAR(table.name),SETDB(VAR('db')))
-	str+=MEMBER(VAR(table.name),CALL('initFromPost',""))
-	str+=EQUAL(VAR('retObj'),MEMBER(VAR(table.name),CALLIN('get',"")))
+	str+=EQUAL(VAR('retObj'),MEMBER(VAR(table.name),CALLIN('getLocalById',getArgs(keySet))))
 	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
 	return str+"\n"
 
@@ -124,9 +131,12 @@ def getGetAllFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getForiegnKeys()
 	keySet=tableSurface.getKeys()
-	str=""
+	if is_empty(keySet):
+		return ""
+	str="$result=array();\n"
 	str+=getGet(tableSurface)
 	for v in varList:
 		str+=getForiegnGet(varList[v])
+	str+="$retObj=(object)$result;\n"
 	str+=returnSuccess
 	return FUNCTION(tableName,"$db,"+getArgs(keySet),str)
