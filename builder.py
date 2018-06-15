@@ -43,19 +43,6 @@ def getAddFunction(tableSurface):
 	str+=returnSuccess
 	return FUNCTION("add","",str)
 
-def getSelectByIdFunction(tableSurface):
-	tableName=tableSurface.name
-	varList=tableSurface.getKeys()
-	str=getArgsToLocal(varList)
-	str+=getValidations(varList)
-	str+=PREPARE(getSelectById(tableSurface))
-	str+=getBindings(varList)
-	str+=EXEC(tableName+" : SELECT LOCAL BY ID")
-	str+="$retObj"+"="+fetchObj
-	str+=returnSuccess
-	return str
-	return FUNCTION("getLocalById",getArgs(varList),str)
-
 def getUpdateByIdFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getKeys()
@@ -74,6 +61,7 @@ def getSelectLocalByIdFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getKeys()
 	str=getArgsToLocal(varList)
+	str+=getValidations(varList)
 	str+=PREPARE(getSelectById(tableSurface))
 	str+=getBindings(varList)
 	str+=EXEC(tableName+" : SELECT LOCAL BY ID")
@@ -81,9 +69,22 @@ def getSelectLocalByIdFunction(tableSurface):
 	str+=returnSuccess
 	return FUNCTION("getLocalById",getArgs(varList),str)
 
+def getSelectByIdFunction(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getKeys()
+	str=getArgsToLocal(varList)
+	str+=getValidations(varList)
+	str+=PREPARE(getSelectById(tableSurface))
+	str+=getBindings(varList)
+	str+=EXEC(tableName+" : SELECT LOCAL BY ID")
+	str+="$retObj"+"="+fetchObj
+	str+=returnSuccess
+	return str
+	return FUNCTION("getLocalById",getArgs(varList),str)
+
 def getForiegnAdd(var):
-	str=EQUAL(VAR("retObj"),CALLIN("Add::"+var.keyReference,""))
-	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),ROLLBACK(VAR("db"))+RETURN(VAR('retObj')))
+	str=EQUAL(VAR("retObj"),CALLIN("Add::"+var.keyReference,"$db"))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
 	str+=EQUAL(POST(var.alias),MEMBER(VAR('retObj->data'),var.name))
 	return str+"\n"
 
@@ -92,16 +93,40 @@ def getAdd(table):
 	str+=MEMBER(VAR(table.name),SETDB(VAR('db')))
 	str+=MEMBER(VAR(table.name),CALL('initFromPost',""))
 	str+=EQUAL(VAR('retObj'),MEMBER(VAR(table.name),CALLIN('add',"")))
-	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),ROLLBACK(VAR("db"))+RETURN(VAR('retObj')))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
 	return str+"\n"
 
 def getAddAllFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getForiegnKeys()
-	str="$db=createConnection();\n"
+	str=""
 	for v in varList:
 		str+=getForiegnAdd(varList[v])
 	str+=getAdd(tableSurface)
-	str+=COMMIT(VAR('db'))
 	str+=returnSuccess
-	return FUNCTION(tableName,"",str)
+	return FUNCTION(tableName,"$db",str)
+
+def getForiegnGet(var):
+	str=EQUAL(VAR("retObj"),CALLIN("Get::"+var.keyReference,"$db"))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
+	str+=EQUAL(POST(var.alias),MEMBER(VAR('retObj->data'),var.name))
+	return str+"\n"
+
+def getGet(table):
+	str=EQUAL(VAR(table.name),"new "+CALLIN(table.name,""))
+	str+=MEMBER(VAR(table.name),SETDB(VAR('db')))
+	str+=MEMBER(VAR(table.name),CALL('initFromPost',""))
+	str+=EQUAL(VAR('retObj'),MEMBER(VAR(table.name),CALLIN('get',"")))
+	str+=IF(ISEQUAL(VAR("retObj->status"),"'ERROR'"),RETURN(VAR('retObj')))
+	return str+"\n"
+
+def getGetAllFunction(tableSurface):
+	tableName=tableSurface.name
+	varList=tableSurface.getForiegnKeys()
+	keySet=tableSurface.getKeys()
+	str=""
+	str+=getGet(tableSurface)
+	for v in varList:
+		str+=getForiegnGet(varList[v])
+	str+=returnSuccess
+	return FUNCTION(tableName,"$db,"+getArgs(keySet),str)

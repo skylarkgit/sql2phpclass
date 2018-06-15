@@ -61,3 +61,27 @@ finalPhp=	beautify("add.php")
 phpFile	= 	open("add.php", "w")
 phpFile.write(finalPhp)
 phpFile.close()
+
+#GET.php
+phpStr=REQUIRE_ONCE("dbconn.php")
+phpStr+=REQUIRE_ONCE("toolbag.php")
+phpStr+=REQUIRE_ONCE("classes.php")
+phpStr+=REQUIRE_ONCE("auth.php")
+fncs=""
+for a in tableSurfaces:
+	fncs+=getGetAllFunction(tableSurfaces[a])
+
+print(fncs)
+
+phpStr+=CLASS("Get",fncs)
+
+phpStr	=	PHP(phpStr)
+phpFile = 	open("get.php", "w")
+phpFile.write(phpStr)
+phpFile.close()
+
+finalPhp=	beautify("get.php")
+
+phpFile	= 	open("get.php", "w")
+phpFile.write(finalPhp)
+phpFile.close()
