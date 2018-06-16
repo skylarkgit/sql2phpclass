@@ -32,7 +32,7 @@ writePHP("classes.php",phpStr)
 phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
 fncs=""
 for a in tableSurfaces:
-	fncs+=getAddAllFunction(tableSurfaces[a])
+	fncs+="static "+getAddAllFunction(tableSurfaces[a])
 print(fncs)
 phpStr+=CLASS("Add",fncs)
 writePHP("add.php",phpStr)
@@ -41,7 +41,7 @@ writePHP("add.php",phpStr)
 phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
 fncs=""
 for a in tableSurfaces:
-	fncs+=getGetAllFunction(tableSurfaces[a])
+	fncs+="static "+getGetAllFunction(tableSurfaces[a])
 print(fncs)
 phpStr+=CLASS("Get",fncs)
 writePHP("get.php",phpStr)
@@ -51,7 +51,7 @@ writePHP("get.php",phpStr)
 phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
 fncs=""
 for a in tableSurfaces:
-	fncs+=getUpdateAllFunction(tableSurfaces[a])
+	fncs+="static "+getUpdateAllFunction(tableSurfaces[a])
 print(fncs)
 phpStr+=CLASS("Update",fncs)
 writePHP("update.php",phpStr)
