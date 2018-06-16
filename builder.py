@@ -107,7 +107,8 @@ def getAddAllFunction(tableSurface):
 	varList=tableSurface.getForiegnKeys()
 	str=""
 	for v in varList:
-		str+=getForiegnAdd(varList[v])
+		if varList[v].relationType=='OTO':
+			str+=getForiegnAdd(varList[v])
 	str+=getAdd(tableSurface)
 	str+=returnSuccess
 	return FUNCTION(tableName,"$db",str)
@@ -160,7 +161,8 @@ def getUpdateAllFunction(tableSurface):
 	varList=tableSurface.getForiegnKeys()
 	str=""
 	for v in varList:
-		str+=getForiegnUpdate(varList[v])
+		if varList[v].relationType=='OTO':
+			str+=getForiegnUpdate(varList[v])
 	str+=getUpdate(tableSurface)
 	str+=returnSuccess
 	return FUNCTION(tableName,"$db",str)

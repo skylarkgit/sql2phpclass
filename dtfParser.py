@@ -1,7 +1,7 @@
 import csv
 
 class Column:
-	def __init__(self, name, type, keyType, keyReference,validType,lengthConstraint):
+	def __init__(self, name, type, keyType, keyReference,validType,lengthConstraint,params=None):
 		self.name=name
 		self.alias=name
 		self.type=type
@@ -11,10 +11,12 @@ class Column:
 		#print("name="+name+" keyType="+str(keyType)+" keyReference="+str(keyReference))
 		self.validType=validType
 		self.lenConstraint=(lengthConstraint!="")
-		if(self.lenConstraint==True):
+		if self.lenConstraint==True:
 			lens=lengthConstraint.split("-")
 			self.minLen=lens[0]
 			self.maxLen=lens[1]
+		if keyType=='FOR':
+			self.relationType=params[8]
 		self.keyReference=keyReference
 
 class Table:
@@ -74,10 +76,10 @@ def dtfParse(fName):
 	for l in rows:
 		print(",".join(l))
 		if l[0] in data:
-			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7]))
+			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7],l))
 		else:
 			data[l[0]]=Table(l[0])
-			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7]))
+			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7],l))
 	return data
 
 #def trimAUTO(varList,isAUTO):
