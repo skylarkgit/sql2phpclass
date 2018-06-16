@@ -1,7 +1,9 @@
-from phpTemplates import *
+import sys
+sys.path.append("..")
+from php.phpTemplates import *
+from php.phpTools import *
 from dtfParser import *
-from phpTools import *
-from sqlTemplates import *
+from sql.sqlTemplates import *
 
 
 def getValidate(var):

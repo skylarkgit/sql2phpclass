@@ -1,8 +1,7 @@
 import sys
-import numpy as np
-from phpTemplates import *
+from php.phpTemplates import *
 from dtfParser import *
-from phpTools import *
+from php.phpTools import *
 from builder import *
 
 print("Parsing.........")
@@ -48,6 +47,15 @@ writePHP("get.php",phpStr)
 
 
 #UPDATE.php
+phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
+fncs=""
+for a in tableSurfaces:
+	fncs+="static "+getUpdateAllFunction(tableSurfaces[a])
+print(fncs)
+phpStr+=CLASS("Update",fncs)
+writePHP("update.php",phpStr)
+
+#ADD.tpl
 phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
 fncs=""
 for a in tableSurfaces:

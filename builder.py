@@ -1,7 +1,7 @@
 from dtfParser import *
-from sqlTemplates import *
-from phpTemplates import *
-from phpsupport import *
+from sql.sqlTemplates import *
+from php.phpTemplates import *
+from php.phpSupport import *
 
 def is_empty(struct):
 	if struct:
