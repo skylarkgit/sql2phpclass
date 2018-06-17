@@ -52,6 +52,7 @@ class Table:
 			if v.isAUTO==False:
 				settables[v.name]=v
 		return settables
+		
 	def getVars(self):
 		varl={}
 		for v in self.varList:
