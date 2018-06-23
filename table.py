@@ -1,4 +1,5 @@
 import sys
+from htmlBuilds.htmlBuilder import *
 from php.phpTemplates import *
 from dtfParser import *
 from php.phpTools import *
@@ -22,7 +23,7 @@ for a in tableSurfaces:
 	str+=getSelectLocalByIdFunction(tableSurfaces[a])
 	str+=getUpdateByIdFunction(tableSurfaces[a])
 	str+=getPostArgsFunction(tableSurfaces[a])
-	print(str)
+	#print(str)
 	phpStr+=CLASS(a+" extends dbconn",str)
 
 writePHP("classes.php",phpStr)
@@ -32,7 +33,7 @@ phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("clas
 fncs=""
 for a in tableSurfaces:
 	fncs+="static "+getAddAllFunction(tableSurfaces[a])
-print(fncs)
+#print(fncs)
 phpStr+=CLASS("Add",fncs)
 writePHP("add.php",phpStr)
 
@@ -41,7 +42,7 @@ phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("clas
 fncs=""
 for a in tableSurfaces:
 	fncs+="static "+getGetAllFunction(tableSurfaces[a])
-print(fncs)
+#print(fncs)
 phpStr+=CLASS("Get",fncs)
 writePHP("get.php",phpStr)
 
@@ -51,15 +52,11 @@ phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("clas
 fncs=""
 for a in tableSurfaces:
 	fncs+="static "+getUpdateAllFunction(tableSurfaces[a])
-print(fncs)
+#print(fncs)
 phpStr+=CLASS("Update",fncs)
 writePHP("update.php",phpStr)
 
 #ADD.tpl
-phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
-fncs=""
-for a in tableSurfaces:
-	fncs+="static "+getUpdateAllFunction(tableSurfaces[a])
-print(fncs)
-phpStr+=CLASS("Update",fncs)
-writePHP("update.php",phpStr)
+createHTMLTemplates(tableSurfaces)
+
+buildControllers(tableSurfaces)
