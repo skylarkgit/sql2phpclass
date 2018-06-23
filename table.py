@@ -4,10 +4,14 @@ from php.phpTemplates import *
 from dtfParser import *
 from php.phpTools import *
 from builder import *
+from jsBuilds.jsBuilder import *
 
 print("Parsing.........")
 
 tableSurfaces=dtfParse("table.dtf")
+
+for t in tableSurfaces.values():
+	print(t.name+"-----"+(','.join(t.varList)))
 
 print("Finished Parsing")
 

@@ -1,7 +1,7 @@
 callendTemplate         =   '{fname}({args});\n'
 callTemplate            =   '{fname}({args})'
-controllerTemplate      =   'conntroller("{name}",function({dependencies}){{\n{code}\n}});\n'
-controllerNameTemplate  =   '{func}{tabke}Controller'
+controllerTemplate      =   'controller("{name}",function({dependencies}){{\n{code}\n}});\n'
+controllerNameTemplate  =   '{func}{table}Controller'
 fetchServiceTemplate    =   'FetchService.get("{name}").then(function(response){{\n{code}\n}})'
 functionTemplate        =   'function({args}){{\n{code}\n}}\n'
 objTemplate             =   '{parent}.{obj}'
@@ -26,7 +26,7 @@ def CONTROLLER(name,dependencies,code):
     return controllerTemplate.format(name=name,dependencies=dependencies,code=code)
 
 def FETCHSERVICE(name,code):
-    return fetchServiceTemplate.format(name=name,code=node)
+    return fetchServiceTemplate.format(name=name,code=code)
 
 def FUNCTION(pArgs,pCode):
     return functionTemplate.format(args=pArgs,code=pCode)

@@ -34,19 +34,19 @@ class Table:
 		return keySet
 	def getForiegnKeys(self):
 		keySet={}
-		for v in self.varList.values:
+		for v in self.varList.values():
 			if v.isKey==True and v.keyType=="FOR":
 				keySet[v.name]=v
 		return keySet
 	def getForiegnOTMKeys(self):
 		keySet={}
-		for v in self.varList.values:
+		for v in self.varList.values():
 			if v.isKey==True and v.keyType=="FOR" and v.relationType=="OTM":
 				keySet[v.name]=v
 		return keySet
 	def getForiegnOTOKeys(self):
 		keySet={}
-		for v in self.varList.values:
+		for v in self.varList.values():
 			if v.isKey==True and v.keyType=="FOR" and v.relationType=="OTO":
 				keySet[v.name]=v
 		return keySet
@@ -88,7 +88,7 @@ def dtfParse(fName):
 		if l[0] in data:
 			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7],l))
 		else:
-			data[l[0]]=Table(l[0])
+			data[l[0]]=Table(l[0],{})
 			data[l[0]].append(Column(l[1],l[3],l[4],l[5],l[6],l[7],l))
 	return data
 

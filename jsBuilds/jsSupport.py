@@ -14,5 +14,5 @@ def objFormation(varlist):
 def varsToAliasArr(varList):
     arr={}
     for v in varList.values():
-        arr[v.]=
+        arr[v.alias]=v
     return arr

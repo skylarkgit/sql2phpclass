@@ -32,7 +32,6 @@ def getInsertQuery(tableName,varList):
 	return insertTemplate.format(tableName,",".join(varList),":"+",:".join(varList))
 
 def getSelectQuery(tableName,varList):
-	print(varList)
 	return selectTemplate.format(",".join(var.name+" as "+var.alias for var in varList.values()),tableName)
 
 def getUpdateQuery(tableName,varList,clause):

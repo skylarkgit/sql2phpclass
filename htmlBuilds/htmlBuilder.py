@@ -13,15 +13,16 @@ def getHTMLAllAdd(ownerTableSurface,tableSurface=None):
     if tableSurface==None:
         tableSurface=ownerTableSurface
     varList=tableSurface.getSettable()
-    code=""
-    for v in varList:
-        if varList[v].isKey and varList[v].keyType=="FOR" and varList[v].relationType=='OTO':
-            code+=getHTMLAllAdd(ownerTableSurface,table[varList[v].keyReference])
-        elif varList[v].isKey and varList[v].keyType=="FOR" and varList[v].relationType=='OTM':
-            code+=getForeignAdd(ownerTableSurface,varList[v],table[varList[v].keyReference])
+    code='<md-divider md-inset ng-if="!$last"></md-divider>\n'
+    for v in varList.values():
+        if v.isKey and v.keyType=="FOR" and v.relationType=='OTO':
+            #print(v.name+"----"+ownerTableSurface.name+"----"+tableSurface.name+"-----"+v.keyReference)
+            code+=getHTMLAllAdd(ownerTableSurface,table[v.keyReference])
+        elif v.isKey and v.keyType=="FOR" and v.relationType=='OTM':
+            code+=getForeignAdd(ownerTableSurface,v,table[v.keyReference])
         else :
-            code+=getHTMLAdd(ownerTableSurface,varList[v])
-    return code+'<md-divider md-inset ng-if="!$last"></md-divider>'
+            code+=getHTMLAdd(ownerTableSurface,v)
+    return code
 
 def buildHTMLTemplate(tableSurface):
     code=getHTMLAllAdd(tableSurface)

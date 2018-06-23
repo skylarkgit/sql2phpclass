@@ -126,7 +126,7 @@ def getInputCode(tableSurface,column,type=None):
     tableName=tableSurface.name
     if type not in inputTemplates:
         type='default'
-    print(tableName+" "+column.alias+" "+type)
+    #print(tableName+" "+column.alias+" "+type)
     return inputTemplates[type].format(model=column.alias,controller=tableName+"Controller",label=column.alias.title(),form=tableName+"Form",id=tableName+column.alias+'ID',name=tableName+column.alias,extensions='')
 
 def getFormBodyCode(tableSurface,filler,func='add',tmethod="POST"):

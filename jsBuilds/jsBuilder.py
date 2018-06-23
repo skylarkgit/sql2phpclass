@@ -2,7 +2,9 @@ import sys
 sys.path.append('..')
 from jsBuilds.jsTemplates import *
 from jsBuilds.jsSupport import *
+from lib.fileOps import *
 tables=None
+DEPENDENCIES="scope,archonAPI,ToolBag"
 
 def getFetchServices(tableSurface):
 	tableName=tableSurface.alias
@@ -26,14 +28,14 @@ def createController(tableSurface):
 	code=SCOPE(VALIDITY(SCOPE('add'+tableName+'Controller')))
 	code+=getFetchServices(tableSurface)
 	code+=getSubmission(tableSurface)
-	controller=CONTROLLER(CONTROLLERNAME(tableName),DEPENDENCIES,code)
+	return OBJ('app',CONTROLLER(CONTROLLERNAME('add',tableName),DEPENDENCIES,code))
 
 def buildControllers(tableSurfaces):
 	global tables
 	tables=tableSurfaces
 	code=""
 	touchd('js')
-	for t in tables:
+	for t in tables.values():
 		code+=createController(t)
-	f=open('controllers.js','w')
+	f=open('js\controllers.js','w')
 	f.write(code)
