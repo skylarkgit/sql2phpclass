@@ -51,7 +51,7 @@ personalInfo,name,name,varchar,,,string,
 personalInfo,gender,gender,varchar,,,genderType,
 personalInfo,bloodGroup,bloodGroup,varchar,,,bloodGroupType,
 personalInfo,dob,dob,date,,,date,
-personalInfo,aadhar,aadhar,bigint,UNI,,number,12-12
+personalInfo,aadhar,aadhar,bigint,UNI,,aadhar,12-12
 personalInfo,infoId,infoId,bigint,PRI,AUTO,number,
 profiles,type,type,char,,,profileType,
 profiles,name,name,varchar,UNI,,string,

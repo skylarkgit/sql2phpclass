@@ -43,7 +43,16 @@ inputTemplates={
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
     <input name="{name}" ng-model="{controller}.{model}" id="{id}" ng-pattern="/^[0-9]{{10}}$/" {extensions}/>\
-    <div class="hint">(+91) ##-##-######</div>\
+    <div class="hint">10 digits</div>\
+      <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
+        <div ng-messages-include="validationMessages.html"></div>\
+      </div>\
+</md-input-container>',
+'aadhar':
+'<md-input-container class="md-block" flex-gt-sm>\
+    <label>{label}</label>\
+    <input name="{name}" ng-model="{controller}.{model}" id="{id}" ng-pattern="/^[0-9]{{12}}$/" {extensions}/>\
+    <div class="hint">12 digits</div>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -109,6 +118,10 @@ inputTemplates={
         <md-icon md-font-icon="fa fa-plus-circle"></md-icon>\
     </md-button>\
 </md-input-container>',
+'submit':
+'<div>\
+    <md-button type="submit" class="md-raised md-primary">Submit</md-button>\
+</div>',
 'default':
 '<md-input-container>\
     <label>{label}</label>\
@@ -123,7 +136,7 @@ headingTemplate         =   '<div class="archonHeading">{heading}</div>'
 def HEADING(heading,code):
     if code=='':
         return code
-    return headingTemplate.format(heading=heading.title())+code
+    return headingTemplate.format(heading=heading.title())+CONTENT(code)
 
 def SECTION(heading,code):
     if code=='':
@@ -131,7 +144,12 @@ def SECTION(heading,code):
     return sectionTemplate.format(heading=heading.title(),code=code)
 
 def CONTENT(code,theme="altTheme"):
+    if code=='':
+        return code
     return contentTemplate.format(code=code,theme=theme)
+
+def SUBMIT(tableSurface):
+    return inputTemplates['submit']
 
 formBodyTemplate=\
 '<form ng-submit="{submit}" name="{form}" method="{method}" ng-controller="{controller}" class="archonFormBody">\

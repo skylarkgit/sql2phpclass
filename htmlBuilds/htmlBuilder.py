@@ -5,6 +5,7 @@ from htmlBuilds.mytemplate import *
 from htmlBuilds.htmlSupport import *
 from lib.fileOps import *
 import bs4
+import html
 table=None
 
 def getHTMLAdd(tableSurface,column,type=None):
@@ -28,8 +29,8 @@ def getHTMLAllAdd(ownerTableSurface,tableSurface=None):
     return code
 
 def buildHTMLTemplate(tableSurface):
-    code=getHTMLAllAdd(tableSurface)
-    return wrapForm(getFormBodyCode(tableSurface,CONTENT(code)))
+    code=getHTMLAllAdd(tableSurface)+SUBMIT(tableSurface)
+    return wrapForm(getFormBodyCode(tableSurface,code))
 
 def createHTMLTemplates(tables):
     global table
@@ -39,5 +40,5 @@ def createHTMLTemplates(tables):
         print(t)
     for t in table:
         f=open("htmlTemplates/add"+table[t].alias+".html.tpl",'w')
-        f.write(bs4.BeautifulSoup(buildHTMLTemplate(table[t]), "html5lib").prettify())
+        f.write(html.unescape(bs4.BeautifulSoup(buildHTMLTemplate(table[t]), "html5lib").prettify()))
         f.close()
