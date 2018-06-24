@@ -3,8 +3,10 @@ sys.path.append('..')
 from jsBuilds.jsTemplates import *
 from jsBuilds.jsSupport import *
 from lib.fileOps import *
+import jsbeautifier
+
 tables=None
-DEPENDENCIES="scope,archonAPI,ToolBag"
+DEPENDENCIES="$scope,archonAPI,ToolBag,$http,$window"
 
 def getFetchServices(tableSurface):
 	tableName=tableSurface.alias
@@ -26,7 +28,7 @@ def createController(tableSurface):
 	varList=tableSurface.getSettable()
 	arr=varsToAliasArr(varList)
 	code=SCOPE(VALIDITY(SCOPE('add'+tableName+'Controller')))
-	code+=getFetchServices(tableSurface)
+	#code+=getFetchServices(tableSurface)
 	code+=getSubmission(tableSurface)
 	return OBJ('app',CONTROLLER(CONTROLLERNAME('add',tableName),DEPENDENCIES,code))
 
@@ -38,4 +40,4 @@ def buildControllers(tableSurfaces):
 	for t in tables.values():
 		code+=createController(t)
 	f=open('js\controllers.js','w')
-	f.write(code)
+	f.write(jsbeautifier.beautify(code))

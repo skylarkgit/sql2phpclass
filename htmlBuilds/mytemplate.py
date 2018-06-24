@@ -115,8 +115,26 @@ inputTemplates={
     \
 </md-input-container>'
 }
+
+sectionTemplate         =   '<section class="archonSection">\n<md-subheader>{heading}</md-subheader>\n{code}</section>\n'
+contentTemplate         =   '<md-content>{code}</md-content>'
+headingTemplate         =   '<div class="archonHeading">{heading}</div>'
+
+def HEADING(heading,code):
+    if code=='':
+        return code
+    return headingTemplate.format(heading=heading.title())+code
+
+def SECTION(heading,code):
+    if code=='':
+        return code
+    return sectionTemplate.format(heading=heading.title(),code=code)
+
+def CONTENT(code,theme="altTheme"):
+    return contentTemplate.format(code=code,theme=theme)
+
 formBodyTemplate=\
-'<form ng-submit="{submit}" name="{form}" method="{method}" ng-controller="{controller}">\
+'<form ng-submit="{submit}" name="{form}" method="{method}" ng-controller="{controller}" class="archonFormBody">\
 {code}\
 </form>'
 onsubmit="submission()"
@@ -131,7 +149,7 @@ def getInputCode(tableSurface,column,type=None):
 
 def getFormBodyCode(tableSurface,filler,func='add',tmethod="POST"):
     tableName=tableSurface.name
-    return formBodyTemplate.format(form=func+tableName+"Form",controller=tableName+"Controller",method=tmethod,submit=onsubmit,code=filler)
+    return formBodyTemplate.format(form=func+tableName+"Form",controller=func+tableName+"Controller",method=tmethod,submit=onsubmit,code=filler)
 
 def getForeignAdd(tableSurface,column,referenceTable):
     tableName=tableSurface.name

@@ -10,7 +10,7 @@ onSuccessTemplate       =   'toastr.success({message},"Success");\n'
 postSubmissionTemplate  =   'if(response.data.status=="OK") {{{success}}};\nelse {{{failure}}}'
 scopeTemplate           =   '$scope.{obj}'
 statementTemplate       =   '{statement};\n'
-submissionTemplate      =   '$scope.submission=function(){{\nvar obj={{{code}}};\narchonAPI.call(obj).then({todo});\n}}\n'
+submissionTemplate      =   '$scope.submission=function(){{\nvar obj={{{code}}};\narchonAPI.call(obj);}}\n'#.then(function(rersponse){{{todo}}});\n}}\n'
 validityTemplate        =   'checkValidity=function(){{\nreturn {toCheck}.$invalid;\n}}\n'
 
 def CONTROLLERNAME(func,table):

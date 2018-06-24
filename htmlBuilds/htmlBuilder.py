@@ -2,6 +2,7 @@ import sys
 sys.path.append('..')
 from htmlBuilds.htmlTemplates import *
 from htmlBuilds.mytemplate import *
+from htmlBuilds.htmlSupport import *
 from lib.fileOps import *
 import bs4
 table=None
@@ -13,20 +14,22 @@ def getHTMLAllAdd(ownerTableSurface,tableSurface=None):
     if tableSurface==None:
         tableSurface=ownerTableSurface
     varList=tableSurface.getSettable()
-    code='<md-divider md-inset ng-if="!$last"></md-divider>\n'
+    code1=''
+    code2=''
     for v in varList.values():
         if v.isKey and v.keyType=="FOR" and v.relationType=='OTO':
             #print(v.name+"----"+ownerTableSurface.name+"----"+tableSurface.name+"-----"+v.keyReference)
-            code+=getHTMLAllAdd(ownerTableSurface,table[v.keyReference])
+            code2+=getHTMLAllAdd(ownerTableSurface,table[v.keyReference])
         elif v.isKey and v.keyType=="FOR" and v.relationType=='OTM':
-            code+=getForeignAdd(ownerTableSurface,v,table[v.keyReference])
+            code1+=getForeignAdd(ownerTableSurface,v,table[v.keyReference])
         else :
-            code+=getHTMLAdd(ownerTableSurface,v)
+            code1+=getHTMLAdd(ownerTableSurface,v)
+    code=HEADING(tableSurface.alias,code1)+code2
     return code
 
 def buildHTMLTemplate(tableSurface):
     code=getHTMLAllAdd(tableSurface)
-    return getFormBodyCode(tableSurface,code)
+    return wrapForm(getFormBodyCode(tableSurface,CONTENT(code)))
 
 def createHTMLTemplates(tables):
     global table
