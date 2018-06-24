@@ -7,6 +7,7 @@ from sql.sqlTemplates import *
 bindTemplate		=	"$stmt->bindParam(':{}',${});\n"
 callTemplate		=	"{}({});\n"
 callinTemplate		=	"{}({})"
+caseTemplate		=	"case '{match}': {code}break;\n"
 classTemplate		=	"class {}{{\n{}}}\n"
 commitTemplate		=	"{}->commit();\n"
 equalTemplate		=	"{}={};\n"
@@ -17,6 +18,7 @@ equalityTemplate	=	"({}=={})"
 functionTemplate	=	"function {}({}){{\n{}}}\n"
 fetchObj			=	"$stmt->fetch(PDO::FETCH_OBJ);\n"
 ifTemplate			=	"if({}) {{\n{}}}\n"
+issetTemplate		=	"isset({var})"
 lastInsertId		=	"$this->db->lastInsertId();\n"
 memberTemplate		=	"{}->{}"
 nonEqualityTemplate	=	"({}!={})"
@@ -32,7 +34,23 @@ sanitizeTemplate	=	"sanitize({},'{}');\n"
 setdbTemplate		=	"setdb({});\n"
 strlenTemplate		=	"strlen(''.{})"
 strInRangeTemplate	=	"strInRange({},{},{})"
+switchTemplate		=	"switch({var}){\n{code}}\n;"
 validateTemplate	=	"validate({},'{}')"
+apiCallsTemplates	=	{
+'ADD': 'return Add::{tableName}($db);',
+'UPDATE': 'return Add::{tableName}($db);',
+'GET': 'return Get::{tableName}($db);',
+'SELECT': 'return Add::{tableName}($db);',
+}
+
+def ISSET(var):
+	return issetTemplate.format(var=var)
+
+def CASE(match,code):
+	return caseTemplate.format(match=match,code=code)
+
+def SWITCH(var,code):
+	return switchTemplate.format(var=var,code=code)
 
 def MEMBER(obj,mem):
 	return memberTemplate.format(obj,mem)

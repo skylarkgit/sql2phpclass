@@ -1,10 +1,9 @@
 import sys
 sys.path.append("..")
-from php.phpTemplates import *
-from php.phpTools import *
+from phpBuilds.phpTemplates import *
+from phpBuilds.phpTools import *
 from dtfParser import *
 from sql.sqlTemplates import *
-
 
 def getValidate(var):
 	return VALIDATE(THIS(var.name),var.validType)
@@ -63,3 +62,5 @@ def writePHP(fname,code):
 	phpFile	=open(fname, "w")
 	phpFile.write(finalPhp)
 	phpFile.close()
+
+def getAPIcase(type,tableSurface):

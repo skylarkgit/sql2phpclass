@@ -1,7 +1,10 @@
+import sys
+sys.path.append('..')
 from dtfParser import *
 from sql.sqlTemplates import *
-from php.phpTemplates import *
-from php.phpSupport import *
+from phpBuilds.phpTemplates import *
+from phpBuilds.phpSupport import *
+from lib.fileOps import *
 
 def is_empty(struct):
 	if struct:
@@ -166,3 +169,44 @@ def getUpdateAllFunction(tableSurface):
 	str+=getUpdate(tableSurface)
 	str+=returnSuccess
 	return FUNCTION(tableName,"$db",str)
+
+def createPHPClasses(tableSurfaces):
+    phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")
+    for a in tableSurfaces:
+    	str=getDeclarations(tableSurfaces[a])
+    	str+=getConstructor(tableSurfaces[a])
+    	#str+=getNulledConstructor(tableSurfaces[a])
+    	str+=getAddFunction(tableSurfaces[a])
+    	str+=getSelectLocalByIdFunction(tableSurfaces[a])
+    	str+=getUpdateByIdFunction(tableSurfaces[a])
+    	str+=getPostArgsFunction(tableSurfaces[a])
+    	#print(str)
+    	phpStr+=CLASS(a+" extends dbconn",str)
+    writePHP("php/classes.php",phpStr)
+
+def createAddFunctions(tableSurfaces):
+    phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
+    fncs=""
+    for a in tableSurfaces:
+    	fncs+="static "+getAddAllFunction(tableSurfaces[a])
+    #print(fncs)
+    phpStr+=CLASS("Add",fncs)
+    writePHP("php/add.php",phpStr)
+
+def createUpdateFunctions(tableSurfaces):
+    phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
+    fncs=""
+    for a in tableSurfaces:
+    	fncs+="static "+getUpdateAllFunction(tableSurfaces[a])
+    #print(fncs)
+    phpStr+=CLASS("Update",fncs)
+    writePHP("php/update.php",phpStr)
+
+def createGetFunctions(tableSurfaces):
+    phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
+    fncs=""
+    for a in tableSurfaces:
+    	fncs+="static "+getGetAllFunction(tableSurfaces[a])
+    #print(fncs)
+    phpStr+=CLASS("Get",fncs)
+    writePHP("php/get.php",phpStr)
