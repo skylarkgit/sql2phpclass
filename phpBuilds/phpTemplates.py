@@ -4,6 +4,7 @@ sys.path.append("..")
 from dtfParser import *
 from sql.sqlTemplates import *
 
+beginTransaction	=	"{var}->beginTransaction();\n"
 bindTemplate		=	"$stmt->bindParam(':{}',${});\n"
 callTemplate		=	"{}({});\n"
 callinTemplate		=	"{}({})"
@@ -12,13 +13,16 @@ classTemplate		=	"class {}{{\n{}}}\n"
 commitTemplate		=	"{}->commit();\n"
 equalTemplate		=	"{}={};\n"
 execTemplate		=	"if($stmt->execute()==false) {{\n$this->errorLog($stmt->errorInfo()[2]);\nreturn new RESPONSE(null,'{}','ERROR');\n}}\n"
-elseTemplate		=	"else {}}\n"
-elseifTemplate		=	"elseif({}) @\n"
+elseTemplate		=	"else {{\n{code}}}\n"
+elseifTemplate		=	"elseif({cond}) {{{code}}}\n"
+echoTemplate		=	"echo {var};\n"
 equalityTemplate	=	"({}=={})"
 fetchObj			=	"$stmt->fetch(PDO::FETCH_OBJ);\n"
 functionTemplate	=	"function {}({}){{\n{}}}\n"
+getResponseTemplate	=	"{var}->getResponse()"
 ifTemplate			=	"if({}) {{\n{}}}\n"
 issetTemplate		=	"isset({var})"
+invalidResponse		=	"{var}=RESPONSE('BAD-{msg}','INVALID','ERROR');\n"
 lastInsertId		=	"$this->db->lastInsertId();\n"
 memberTemplate		=	"{}->{}"
 nonEqualityTemplate	=	"({}!={})"
@@ -42,6 +46,24 @@ apiCallsTemplates	=	{
 'GET': 'return Get::{tableName}($db,{vars});',
 'SELECT': 'return Add::{tableName}($db);',
 }
+
+def ELSE(code):
+	return elseTemplate.format(code=code)
+
+def BEGINTRANSACTION(varName):
+	return beginTransaction.format(var=varName)
+
+def DIE():
+	return "die();\n"
+
+def GETRESPONSE(var):
+	return getResponseTemplate.format(var=var)
+
+def ECHO(var):
+	return echoTemplate.format(var=var)
+
+def INVALIDRESPONSE(var,msg):
+	return invalidResponse.format(var=var,msg=msg)
 
 def ISSET(var):
 	return issetTemplate.format(var=var)

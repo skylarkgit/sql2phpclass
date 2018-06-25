@@ -63,6 +63,9 @@ def writePHP(fname,code):
 	phpFile.write(finalPhp)
 	phpFile.close()
 
+def getVarDependency(varName,elsecase):
+	return IF(ISSET(POST(varName)),VAR(varName)+"="+POST(varName)+";\n")+ELSE(elsecase)
+
 def APICALLS(type,tableSurface):
 	tableName=tableSurface.alias
 	keys=tableSurface.getKeys()
@@ -71,3 +74,12 @@ def APICALLS(type,tableSurface):
 def getAPIcase(type,tableSurface):
 	tableName=tableSurface.alias
 	return CASE(tableName,APICALLS(type,tableSurface))
+
+def getTransactionBody(db,var,code):
+	finalcode=VAR(db)+"="+CALL('createConnection','')
+	finalcode+=BEGINTRANSACTION(db)
+	finalcode+=code
+	finalcode+=IF(ISEQUAL(MEMBER(VAR(var),'status'),'OK'),COMMIT(VAR(db)))
+	finalcode+=ELSE(ROLLBACK(VAR(db)))
+	finalcode+=ECHO(GETRESPONSE(VAR(var)))
+	return finalcode

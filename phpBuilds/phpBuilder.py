@@ -216,7 +216,8 @@ def createAddAPI(tableSurfaces):
 	code=""
 	for table in tableSurfaces.values():
 		code+=getAPIcase('ADD',table)
-	code=SWITCH(VAR('functionName'),code)+INVALID('FUNCTIONNAME')
+	code=SWITCH(VAR('functionName'),code)+INVALID('functionName')
 	code=phpStr+FUNCTION('AddAPI','$db,$functionName',code)
-	code+=VAR('db')+"="+CALL(createConnection,'')+VAR(res)+"="+"AddAPI($db,$functionName);\n"
+	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
+	code+=getTransactionBody('db','res',VAR('res')+"="+"AddAPI($db,$functionName);\n")
 	writePHP('php/addAPI.php',code)
