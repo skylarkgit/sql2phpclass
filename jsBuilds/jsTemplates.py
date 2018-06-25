@@ -7,10 +7,10 @@ functionTemplate        =   'function({args}){{\n{code}\n}}\n'
 objTemplate             =   '{parent}.{obj}'
 onFailureTemplate       =   'toastr.error({message},"Error");\n'
 onSuccessTemplate       =   'toastr.success({message},"Success");\n'
-postSubmissionTemplate  =   'if(response.data.status=="OK") {{{success}}};\nelse {{{failure}}}'
+postSubmissionTemplate  =   'if(response.data.status=="OK") {{{success}}}\nelse {{{failure}}}'
 scopeTemplate           =   '$scope.{obj}'
 statementTemplate       =   '{statement};\n'
-submissionTemplate      =   '$scope.submission=function(){{\nvar obj={{{code}}};\narchonAPI.call(obj);}}\n'#.then(function(rersponse){{{todo}}});\n}}\n'
+submissionTemplate      =   '$scope.submission=function(){{\nvar args={code};\narchonAPI.call({type},{fname},args).then(function(response){{{todo}}});\n}}\n'
 validityTemplate        =   'checkValidity=function(){{\nreturn {toCheck}.$invalid;\n}}\n'
 
 def CONTROLLERNAME(func,table):
@@ -51,8 +51,8 @@ def SCOPE(pObj):
 def STATEMENT(pStatement):
     return statementTemplate.format(statement=pStatement)
 
-def SUBMISSION(objFormation,pTodo):
-    return submissionTemplate.format(code=objFormation,todo=pTodo)
+def SUBMISSION(type,objFormation,fname,pTodo):
+    return submissionTemplate.format(type=type,code=objFormation,fname=fname,todo=pTodo)
 
 def VALIDITY(pToCheck):
     return validityTemplate.format(toCheck=pToCheck)

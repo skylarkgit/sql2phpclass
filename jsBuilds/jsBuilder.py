@@ -20,7 +20,8 @@ def getFetchServices(tableSurface):
 	return code
 
 def getSubmission(tableSurface):
-	code=SUBMISSION("","")
+	#code="var obj={"+createObjFromScope(tableSurface.getSettable())+"};\n"
+	code=SUBMISSION('"add"',CALL('ToolBag.objToCallArgs',createObjFromScope(tableSurface.getSettable())),"'"+tableSurface.alias+"'",POSTSUBMISSION("",ONFAILURE('response.data.data')))
 	return code
 
 def createController(tableSurface):
