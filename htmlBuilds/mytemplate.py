@@ -120,7 +120,7 @@ inputTemplates={
 </md-input-container>',
 'submit':
 '<div>\
-    <md-button type="submit" class="md-raised md-primary">Submit</md-button>\
+    <md-button ng-disabled="{form}.$invalid" type="submit" class="md-raised md-primary">Submit</md-button>\
 </div>',
 'default':
 '<md-input-container>\
@@ -148,8 +148,9 @@ def CONTENT(code,theme="altTheme"):
         return code
     return contentTemplate.format(code=code,theme=theme)
 
-def SUBMIT(tableSurface):
-    return inputTemplates['submit']
+def SUBMIT(func,tableSurface):
+    tableName=tableSurface.alias
+    return inputTemplates['submit'].format(form=func+tableName+"Form")
 
 formBodyTemplate=\
 '<form ng-submit="{submit}" name="{form}" method="{method}" ng-controller="{controller}" class="archonFormBody">\
@@ -163,7 +164,7 @@ def getInputCode(tableSurface,column,type=None):
     if type not in inputTemplates:
         type='default'
     #print(tableName+" "+column.alias+" "+type)
-    return inputTemplates[type].format(model=column.alias,controller=tableName+"Controller",label=column.alias.title(),form=tableName+"Form",id=tableName+column.alias+'ID',name=tableName+column.alias,extensions='')
+    return inputTemplates[type].format(model=column.alias,controller=tableName+"Controller",label=column.alias.title(),form=tableName+"Form",id=tableName+column.alias+'ID',name=tableName+column.alias,extensions='required')
 
 def getFormBodyCode(tableSurface,filler,func='add',tmethod="POST"):
     tableName=tableSurface.name

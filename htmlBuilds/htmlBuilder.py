@@ -28,8 +28,8 @@ def getHTMLAllAdd(ownerTableSurface,tableSurface=None):
     code=HEADING(tableSurface.alias,code1)+code2
     return code
 
-def buildHTMLTemplate(tableSurface):
-    code=getHTMLAllAdd(tableSurface)+SUBMIT(tableSurface)
+def buildHTMLAddTemplate(tableSurface):
+    code=getHTMLAllAdd(tableSurface)+SUBMIT('add',tableSurface)
     return wrapForm(getFormBodyCode(tableSurface,code))
 
 def createHTMLTemplates(tables):
@@ -40,5 +40,5 @@ def createHTMLTemplates(tables):
         print(t)
     for t in table:
         f=open("htmlTemplates/add"+table[t].alias+".html.tpl",'w')
-        f.write(html.unescape(bs4.BeautifulSoup(buildHTMLTemplate(table[t]), "html5lib").prettify()))
+        f.write(html.unescape(bs4.BeautifulSoup(buildHTMLAddTemplate(table[t]), "html5lib").prettify()))
         f.close()
