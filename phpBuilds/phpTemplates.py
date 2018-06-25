@@ -15,8 +15,8 @@ execTemplate		=	"if($stmt->execute()==false) {{\n$this->errorLog($stmt->errorInf
 elseTemplate		=	"else {}}\n"
 elseifTemplate		=	"elseif({}) @\n"
 equalityTemplate	=	"({}=={})"
-functionTemplate	=	"function {}({}){{\n{}}}\n"
 fetchObj			=	"$stmt->fetch(PDO::FETCH_OBJ);\n"
+functionTemplate	=	"function {}({}){{\n{}}}\n"
 ifTemplate			=	"if({}) {{\n{}}}\n"
 issetTemplate		=	"isset({var})"
 lastInsertId		=	"$this->db->lastInsertId();\n"
@@ -34,12 +34,12 @@ sanitizeTemplate	=	"sanitize({},'{}');\n"
 setdbTemplate		=	"setdb({});\n"
 strlenTemplate		=	"strlen(''.{})"
 strInRangeTemplate	=	"strInRange({},{},{})"
-switchTemplate		=	"switch({var}){\n{code}}\n;"
+switchTemplate		=	"switch({var}){{\n{code}}}\n;"
 validateTemplate	=	"validate({},'{}')"
 apiCallsTemplates	=	{
 'ADD': 'return Add::{tableName}($db);',
-'UPDATE': 'return Add::{tableName}($db);',
-'GET': 'return Get::{tableName}($db);',
+'UPDATE': 'return Add::{tableName}($db,{vars});',
+'GET': 'return Get::{tableName}($db,{vars});',
 'SELECT': 'return Add::{tableName}($db);',
 }
 

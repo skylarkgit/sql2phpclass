@@ -210,3 +210,13 @@ def createGetFunctions(tableSurfaces):
     #print(fncs)
     phpStr+=CLASS("Get",fncs)
     writePHP("php/get.php",phpStr)
+
+def createAddAPI(tableSurfaces):
+	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
+	code=""
+	for table in tableSurfaces.values():
+		code+=getAPIcase('ADD',table)
+	code=SWITCH(VAR('functionName'),code)+INVALID('FUNCTIONNAME')
+	code=phpStr+FUNCTION('AddAPI','$db,$functionName',code)
+	code+=VAR('db')+"="+CALL(createConnection,'')+VAR(res)+"="+"AddAPI($db,$functionName);\n"
+	writePHP('php/addAPI.php',code)

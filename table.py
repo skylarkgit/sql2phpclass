@@ -25,6 +25,7 @@ touchd('js')
 createPHPClasses(tableSurfaces)
 #ADD.php
 createAddFunctions(tableSurfaces)
+createAddAPI(tableSurfaces)
 #GET.php
 createGetFunctions(tableSurfaces)
 #UPDATE.php

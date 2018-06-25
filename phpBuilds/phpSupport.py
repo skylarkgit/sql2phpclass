@@ -45,13 +45,13 @@ def getBindings(paramList):
 
 def getDeclarations(tableSurface):
 	varList=tableSurface.getVars();
-	return "".join("public "+VAR(x)+";" for x in varList)+"\n";
+	return "".join("public "+VAR(x.alias)+";" for x in varList.values())+"\n";
 
 def getArgs(varList):
-	return ",".join(VAR(x) for x in varList)
+	return ",".join(VAR(x.alias) for x in varList.values())
 
 def getNulledArgs(varList):
-	return ",".join(VAR(x)+"=NULL" for x in varList)
+	return ",".join(VAR(x.alias)+"=NULL" for x in varList.values())
 
 def writePHP(fname,code):
 	phpStr	=PHP(code)
@@ -63,4 +63,11 @@ def writePHP(fname,code):
 	phpFile.write(finalPhp)
 	phpFile.close()
 
+def APICALLS(type,tableSurface):
+	tableName=tableSurface.alias
+	keys=tableSurface.getKeys()
+	return apiCallsTemplates[type].format(tableName=tableName,vars=getArgs(keys))
+
 def getAPIcase(type,tableSurface):
+	tableName=tableSurface.alias
+	return CASE(tableName,APICALLS(type,tableSurface))
