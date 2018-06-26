@@ -77,9 +77,9 @@ def getAPIcase(type,tableSurface):
 
 def getTransactionBody(db,var,code):
 	finalcode=VAR(db)+"="+CALL('createConnection','')
-	finalcode+=BEGINTRANSACTION(db)
+	finalcode+=BEGINTRANSACTION(VAR(db))
 	finalcode+=code
-	finalcode+=IF(ISEQUAL(MEMBER(VAR(var),'status'),'OK'),COMMIT(VAR(db)))
+	finalcode+=IF(ISEQUAL(MEMBER(VAR(var),'status'),'"OK"'),COMMIT(VAR(db)))
 	finalcode+=ELSE(ROLLBACK(VAR(db)))
 	finalcode+=ECHO(GETRESPONSE(VAR(var)))
 	return finalcode

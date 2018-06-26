@@ -2,7 +2,7 @@ inputTemplates={
 'string':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input name="{name}" ng-model="{controller}.{model}" id="{id}" {extensions}/>\
+    <input name="{name}" ng-model="{model}" id="{id}" {extensions}/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -10,7 +10,7 @@ inputTemplates={
 'date':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <md-datepicker name="{name}" ng-model="{controller}.{model}" id="{id}" {extensions}></md-datepicker>\
+    <md-datepicker name="{name}" ng-model="{model}" id="{id}" {extensions}></md-datepicker>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -18,7 +18,7 @@ inputTemplates={
 'number':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input type="number" name="{name}" ng-model="{controller}.{model}" id="{id}" {extensions}/>\
+    <input type="number" name="{name}" ng-model="{model}" id="{id}" {extensions}/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -26,7 +26,7 @@ inputTemplates={
 'float':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input type="number" name="{name}" ng-model="{controller}.{model}" id="{id}"/>\
+    <input type="number" name="{name}" ng-model="{model}" id="{id}"/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -34,7 +34,7 @@ inputTemplates={
 'percent':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input type="number" name="{name}" ng-model="{controller}.{model}" id="{id}" ng-pattern="/^[0-9]{{2}}+(\.[0-9]{{1,2}})?$/" step="0.01" {extensions}/>\
+    <input type="number" name="{name}" ng-model="{model}" id="{id}" ng-pattern="/^[0-9]{{2}}+(\.[0-9]{{1,2}})?$/" step="0.01" {extensions}/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -42,7 +42,7 @@ inputTemplates={
 'phone':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input name="{name}" ng-model="{controller}.{model}" id="{id}" ng-pattern="/^[0-9]{{10}}$/" {extensions}/>\
+    <input name="{name}" ng-model="{model}" id="{id}" ng-pattern="/^[0-9]{{10}}$/" {extensions}/>\
     <div class="hint">10 digits</div>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
@@ -51,7 +51,7 @@ inputTemplates={
 'aadhar':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input name="{name}" ng-model="{controller}.{model}" id="{id}" ng-pattern="/^[0-9]{{12}}$/" {extensions}/>\
+    <input name="{name}" ng-model="{model}" id="{id}" ng-pattern="/^[0-9]{{12}}$/" {extensions}/>\
     <div class="hint">12 digits</div>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
@@ -60,35 +60,42 @@ inputTemplates={
 'email':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input type="email" name="{name}" ng-model="{controller}.{model}" id="{id}" {extensions}/>\
+    <input type="email" name="{name}" ng-model="{model}" id="{id}" {extensions}/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
 </md-input-container>',
 'discountType':
 '<md-input-container layout="row" class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} ng-model="{controller}.{model}">\
+    <md-radio-group name={name} ng-model="{model}">\
         <md-radio-button value="P" class="md-primary">Percent</md-radio-button>\
         <md-radio-button value="A">Amount</md-radio-button>\
     </md-radio-group>\
 </md-input-container>',
+'profileType':
+'<md-input-container layout="row" class="md-block" flex-gt-sm>\
+    <md-radio-group name={name} ng-model="{model}">\
+        <md-radio-button value="D" class="md-primary">Doctor</md-radio-button>\
+        <md-radio-button value="E">Employee</md-radio-button>\
+    </md-radio-group>\
+</md-input-container>',
 'exchangeType':
 '<md-input-container class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} layout="row" ng-model="{controller}.{model}">\
+    <md-radio-group name={name} layout="row" ng-model="{model}">\
         <md-radio-button value="C" class="md-primary">Credit</md-radio-button>\
         <md-radio-button value="D">Debit</md-radio-button>\
     </md-radio-group>\
 </md-input-container>',
 'transactionType':
 '<md-input-container class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} layout="row" ng-model="{controller}.{model}">\
+    <md-radio-group name={name} layout="row" ng-model="{model}">\
         <md-radio-button value="C" class="md-primary">Credit</md-radio-button>\
         <md-radio-button value="D">Debit</md-radio-button>\
     </md-radio-group>\
 </md-input-container>',
 'genderType':
 '<md-input-container class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} layout="row" ng-model="{controller}.{model}">\
+    <md-radio-group name={name} layout="row" ng-model="{model}">\
         <md-radio-button value="F" class="md-primary">Female</md-radio-button>\
         <md-radio-button value="M">Male</md-radio-button>\
         <md-radio-button value="O">Other</md-radio-button>\
@@ -97,8 +104,8 @@ inputTemplates={
 'bloodGroupType':
 '<md-input-container>\
     <label>Blood Group</label>\
-    <md-select name={name} ng-model="{controller}.{model}">\
-        <md-option ng-repeat="blood in {controller}.{model}Data" ng-value="blood">\
+    <md-select name={name} ng-model="{model}">\
+        <md-option ng-repeat="blood in {model}Data" ng-value="blood">\
             {{blood}}\
         </md-option>\
     </md-select>\

@@ -40,7 +40,7 @@ def getAddFunction(tableSurface):
 	allKeys=tableSurface.getKeys()
 	if key!=None:
 		str+="$this->"+key.name+"="+lastInsertId;
-		str+=PREPARE(getSelectQuery(tableName,{key.name:key}))
+		str+=PREPARE(getSelectQuery(tableName,{key.name:key})+getWhereClause(getEqualClause({key.name:key})))
 		str+=getBindings({key.name:key})
 		str+=EXEC(tableName+" : SELECT AUTO")
 		str+="$retObj"+"="+fetchObj
@@ -113,7 +113,7 @@ def getAddAllFunction(tableSurface):
 		if varList[v].relationType=='OTO':
 			str+=getForiegnAdd(varList[v])
 	str+=getAdd(tableSurface)
-	str+=returnSuccess
+	str+=RETURN(VAR('retObj'))
 	return FUNCTION(tableName,"$db",str)
 
 def getForiegnGet(key):
@@ -212,7 +212,7 @@ def createGetFunctions(tableSurfaces):
     writePHP("php/get.php",phpStr)
 
 def createAddAPI(tableSurfaces):
-	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
+	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")
 	code=""
 	for table in tableSurfaces.values():
 		code+=getAPIcase('ADD',table)
