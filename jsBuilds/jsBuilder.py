@@ -44,6 +44,7 @@ def createController(tableSurface):
 	tableName=tableSurface.alias
 	varList=tableSurface.getSettable()
 	code=SCOPE(VALIDITY(SCOPE('add'+tableName+'Controller')))
+	code+=SCOPE('showAdvanced')+'=ToolBag.showAdvanced;\n'
 	code+=getSelectServices(tableSurface)
 	code+=getSubmission(tableSurface)
 	return OBJ('app',CONTROLLER(CONTROLLERNAME('add',tableName),DEPENDENCIES,code))

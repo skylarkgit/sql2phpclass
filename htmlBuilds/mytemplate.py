@@ -126,7 +126,7 @@ inputTemplates={
             <md-option value="{{{{{model}Var.{model}}}}}" ng-repeat="{model}Var in {model}Select | filter:searchTerm{model}">{{{{{model}Var.{model}}}}}</md-option>\
         </md-optgroup>\
     </md-select>\
-    <md-button title="Add some" aria-label="{label}" class="md-icon-button launch md-primary md-raised" ng-click="ToolBag.showAdvanced(\'htmlTemplates\\add{reference}.html.tpl\')">\
+    <md-button title="Add some" aria-label="{label}" class="md-icon-button launch md-primary md-raised" ng-click="showAdvanced($event,\'htmlTemplates\\\\add{reference}.html.tpl\')">\
         <md-icon md-font-icon="fa fa-plus-circle"></md-icon>\
     </md-button>\
 </md-input-container>',
