@@ -170,19 +170,28 @@ def getUpdateAllFunction(tableSurface):
 	str+=returnSuccess
 	return FUNCTION(tableName,"$db",str)
 
+def getSelectAllLocalFunction(tableSurface):
+	tableName=tableSurface.name
+	str="$this->setdb($db);\n"
+	varList=tableSurface.getVars()
+	str+=PREPARE(getSelectQuery(tableName,varList))
+	str+=EXEC(tableName+" : SELECT ALL LOCAL")
+	str+="$retObj"+"="+fetchAll
+	str+=returnSuccess
+	return FUNCTION("getAllLocal",'$db',str)
+
 def createPHPClasses(tableSurfaces):
-    phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")
-    for a in tableSurfaces:
-    	str=getDeclarations(tableSurfaces[a])
-    	str+=getConstructor(tableSurfaces[a])
-    	#str+=getNulledConstructor(tableSurfaces[a])
-    	str+=getAddFunction(tableSurfaces[a])
-    	str+=getSelectLocalByIdFunction(tableSurfaces[a])
-    	str+=getUpdateByIdFunction(tableSurfaces[a])
-    	str+=getPostArgsFunction(tableSurfaces[a])
-    	#print(str)
-    	phpStr+=CLASS(a+" extends dbconn",str)
-    writePHP("php/classes.php",phpStr)
+	phpStr=REQUIRE_ONCE('dbconn.php')+REQUIRE_ONCE('toolbag.php')
+	for a in tableSurfaces:
+		str=getDeclarations(tableSurfaces[a])
+		str+=getConstructor(tableSurfaces[a])
+		str+=getAddFunction(tableSurfaces[a])
+		str+=getSelectAllLocalFunction(tableSurfaces[a])
+		str+=getSelectLocalByIdFunction(tableSurfaces[a])
+		str+=getUpdateByIdFunction(tableSurfaces[a])
+		str+=getPostArgsFunction(tableSurfaces[a])
+		phpStr+=CLASS(a+" extends dbconn",str)
+	writePHP("php/classes.php",phpStr)
 
 def createAddFunctions(tableSurfaces):
     phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("auth.php")
@@ -221,3 +230,14 @@ def createAddAPI(tableSurfaces):
 	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
 	code+=getTransactionBody('db','res',VAR('res')+"="+"AddAPI($db,$functionName);\n")
 	writePHP('php/addAPI.php',code)
+
+def createSelectAPI(tableSurfaces):
+	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")
+	code=""
+	for table in tableSurfaces.values():
+		code+=getAPIcase('SELECT',table)
+	code=SWITCH(VAR('functionName'),code)+INVALID('functionName')
+	code=phpStr+FUNCTION('SelectAPI','$db,$functionName',code)
+	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
+	code+=getTransactionBody('db','res',VAR('res')+"="+"SelectAPI($db,$functionName);\n")
+	writePHP('php/selectAPI.php',code)

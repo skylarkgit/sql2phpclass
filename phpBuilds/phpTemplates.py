@@ -18,6 +18,7 @@ elseifTemplate		=	"elseif({cond}) {{{code}}}\n"
 echoTemplate		=	"echo {var};\n"
 equalityTemplate	=	"({}=={})"
 fetchObj			=	"$stmt->fetch(PDO::FETCH_OBJ);\n"
+fetchAll			=	"$stmt->fetchAll(PDO::FETCH_ASSOC);\n"
 functionTemplate	=	"function {}({}){{\n{}}}\n"
 getResponseTemplate	=	"{var}->getResponse()"
 ifTemplate			=	"if({}) {{\n{}}}\n"
@@ -42,9 +43,9 @@ switchTemplate		=	"switch({var}){{\n{code}}}\n"
 validateTemplate	=	"validate({},'{}')"
 apiCallsTemplates	=	{
 'ADD': 'return Add::{tableName}($db);',
-'UPDATE': 'return Add::{tableName}($db,{vars});',
+'UPDATE': 'return Update::{tableName}($db,{vars});',
 'GET': 'return Get::{tableName}($db,{vars});',
-'SELECT': 'return Add::{tableName}($db);',
+'SELECT': '$obj=new {tableName}();return $obj->getAllLocal($db);',
 }
 
 def ELSE(code):

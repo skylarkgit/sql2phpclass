@@ -67,35 +67,35 @@ inputTemplates={
 </md-input-container>',
 'discountType':
 '<md-input-container layout="row" class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} ng-model="{model}">\
+    <md-radio-group name="{name}" ng-model="{model}">\
         <md-radio-button value="P" class="md-primary">Percent</md-radio-button>\
         <md-radio-button value="A">Amount</md-radio-button>\
     </md-radio-group>\
 </md-input-container>',
 'profileType':
 '<md-input-container layout="row" class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} ng-model="{model}">\
+    <md-radio-group name="{name}" ng-model="{model}">\
         <md-radio-button value="D" class="md-primary">Doctor</md-radio-button>\
         <md-radio-button value="E">Employee</md-radio-button>\
     </md-radio-group>\
 </md-input-container>',
 'exchangeType':
 '<md-input-container class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} layout="row" ng-model="{model}">\
+    <md-radio-group name="{name}" layout="row" ng-model="{model}">\
         <md-radio-button value="C" class="md-primary">Credit</md-radio-button>\
         <md-radio-button value="D">Debit</md-radio-button>\
     </md-radio-group>\
 </md-input-container>',
 'transactionType':
 '<md-input-container class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} layout="row" ng-model="{model}">\
+    <md-radio-group name="{name}" layout="row" ng-model="{model}">\
         <md-radio-button value="C" class="md-primary">Credit</md-radio-button>\
         <md-radio-button value="D">Debit</md-radio-button>\
     </md-radio-group>\
 </md-input-container>',
 'genderType':
 '<md-input-container class="md-block" flex-gt-sm>\
-    <md-radio-group name={name} layout="row" ng-model="{model}">\
+    <md-radio-group name="{name}" layout="row" ng-model="{model}">\
         <md-radio-button value="F" class="md-primary">Female</md-radio-button>\
         <md-radio-button value="M">Male</md-radio-button>\
         <md-radio-button value="O">Other</md-radio-button>\
@@ -104,24 +104,29 @@ inputTemplates={
 'bloodGroupType':
 '<md-input-container>\
     <label>Blood Group</label>\
-    <md-select name={name} ng-model="{model}">\
-        <md-option ng-repeat="blood in {model}Data" ng-value="blood">\
-            {{blood}}\
-        </md-option>\
+    <md-select name="{name}" ng-model="{model}">\
+        <md-option value="Ap">A+</md-option>\
+        <md-option value="Bp">B+</md-option>\
+        <md-option value="An">A-</md-option>\
+        <md-option value="Bn">B-</md-option>\
+        <md-option value="ABp">AB+</md-option>\
+        <md-option value="ABn">AB-</md-option>\
+        <md-option value="Op">O+</md-option>\
+        <md-option value="On">O-</md-option>\
     </md-select>\
 </md-input-container>',
 'foreign':
 '<md-input-container layout="row">\
     <label>{label}</label>\
-    <md-select ng-model="{model}" md-on-close="clearSearchTerm(\'search{model}\')" data-md-container-class="selectdemoSelectHeader">\
+    <md-select ng-model="{model}" md-on-close="clearSearchTerm(\'search{model}\')" data-md-container-class="selectdemoSelectHeader" required>\
         <md-select-header class="demo-select-header">\
             <input ng-model="searchTerm{model}" type="search" placeholder="Search for a {name}.." class="demo-header-searchbox md-text">\
         </md-select-header>\
         <md-optgroup label="{label}">\
-            <md-option ng-value="{model}Var.val" ng-repeat="{model}Var in {model}Select | filter:searchTerm{model}">{model}Var.display</md-option>\
+            <md-option value="{{{{{model}Var.{model}}}}}" ng-repeat="{model}Var in {model}Select | filter:searchTerm{model}">{{{{{model}Var.{model}}}}}</md-option>\
         </md-optgroup>\
     </md-select>\
-    <md-button title="Add some" aria-label="{label}" class="md-icon-button launch md-primary md-raised" ng-click="showAdvanced("htmlTemplates\add{reference}.htmp.tpl")">\
+    <md-button title="Add some" aria-label="{label}" class="md-icon-button launch md-primary md-raised" ng-click="ToolBag.showAdvanced(\'htmlTemplates\\add{reference}.html.tpl\')">\
         <md-icon md-font-icon="fa fa-plus-circle"></md-icon>\
     </md-button>\
 </md-input-container>',

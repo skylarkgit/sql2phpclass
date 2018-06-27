@@ -18,4 +18,4 @@ def varsToAliasArr(varList):
     return arr
 
 def createObjFromScope(varList):
-    return '{'+(','.join(v.alias+":$scope."+v.alias for v in varList.values()))+'}'
+    return '{'+(','.join(v.alias+":"+PARSER(v.validType,SCOPE(v.alias)) for v in varList.values()))+'}'

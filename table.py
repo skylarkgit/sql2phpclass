@@ -20,6 +20,9 @@ touchd('php')
 touchd('htmlTemplates')
 touchd('js')
 
+#setTables(tableSurfaces)
+#NV=getAllSettables(tableSurfaces['patients'])
+#print(",".join(NV))
 #sys.exit()
 #CLASSES.php
 createPHPClasses(tableSurfaces)
@@ -28,6 +31,7 @@ createAddFunctions(tableSurfaces)
 createAddAPI(tableSurfaces)
 #GET.php
 createGetFunctions(tableSurfaces)
+createSelectAPI(tableSurfaces)
 #UPDATE.php
 createUpdateFunctions(tableSurfaces)
 #ADD.tpl

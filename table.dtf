@@ -2,7 +2,7 @@ address,street,street,varchar,,,string,1-50
 address,city,city,varchar,,,string,1-50
 address,state,state,varchar,,,string,1-50
 address,PIN,PIN,int,,,number,6-6
-address,addrid,addrid,bigint,PRI,AUTO,number,
+address,addrId,addrId,bigint,PRI,AUTO,number,
 bill,chartId,chartId,bigint,FOR,charts,number,,OTO
 bill,exchangeId,exchangeId,bigint,FOR,exchange,number,,OTO
 bill,billId,billId,bigint,PRI,AUTO,number,

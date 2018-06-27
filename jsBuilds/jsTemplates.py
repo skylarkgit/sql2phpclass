@@ -1,3 +1,4 @@
+archonAPIcallTemplate   =   'archonAPI.call("{type}","{fname}","{args}").then(function(response){{{code}}});'
 callendTemplate         =   '{fname}({args});\n'
 callTemplate            =   '{fname}({args})'
 controllerTemplate      =   'controller("{name}",function({dependencies}){{\n{code}\n}});\n'
@@ -12,6 +13,20 @@ scopeTemplate           =   '$scope.{obj}'
 statementTemplate       =   '{statement};\n'
 submissionTemplate      =   '$scope.submission=function(){{\nvar args={code};\narchonAPI.call({type},{fname},args).then(function(response){{{todo}}});\n}}\n'
 validityTemplate        =   'checkValidity=function(){{\nreturn {toCheck}.$invalid;\n}}\n'
+parserTemplates={
+'date':
+'$filter("date")({var}, "yyyy-MM-dd")',
+'default':'{var}'
+}
+
+def PARSER(type,var):
+    if type in parserTemplates:
+        return parserTemplates[type].format(var=var)
+    else:
+        return parserTemplates['default'].format(var=var)
+
+def ARCHONCALL(type,fname,args,code):
+    return archonAPIcallTemplate.format(type=type,fname=fname,args=args,code=code)
 
 def CONTROLLERNAME(func,table):
     return controllerNameTemplate.format(func=func,table=table)
