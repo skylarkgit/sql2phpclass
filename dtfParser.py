@@ -3,6 +3,7 @@ import csv
 class Column:
 	def __init__(self, name, type, keyType, keyReference,validType,lengthConstraint,params=None):
 		self.name=name
+		self.tableName=params[0]
 		self.alias=name
 		self.type=type
 		self.isKey=(keyType!="")

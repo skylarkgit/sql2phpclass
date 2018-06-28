@@ -21,7 +21,6 @@ def getSelectServices(tableSurface):
 
 def getAllSettables(tableSurface,NV={}):
     varList=tableSurface.getSettable()
-    print(tableSurface.name+" ----- "+','.join(varList))
     for v in varList.values():
         if v.isKey and v.keyType=="FOR" and v.relationType=="OTO":
             NV=getAllSettables(tables[v.keyReference],NV)

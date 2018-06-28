@@ -1,4 +1,5 @@
 import sys
+import pprint
 from htmlBuilds.htmlBuilder import *
 from phpBuilds.phpTemplates import *
 from dtfParser import *
@@ -6,7 +7,7 @@ from phpBuilds.phpTools import *
 from phpBuilds.phpBuilder import *
 from jsBuilds.jsBuilder import *
 from lib.fileOps import *
-
+from sql.sqlBuilder import *
 print("Parsing.........")
 
 tableSurfaces=dtfParse("table.dtf")
@@ -20,10 +21,8 @@ touchd('php')
 touchd('htmlTemplates')
 touchd('js')
 
-#setTables(tableSurfaces)
-#NV=getAllSettables(tableSurfaces['patients'])
-#print(",".join(NV))
-#sys.exit()
+print(getJoinQuery(tableSurfaces,tableSurfaces['patients']))
+sys.exit()
 #CLASSES.php
 createPHPClasses(tableSurfaces)
 #ADD.php

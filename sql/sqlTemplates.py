@@ -1,8 +1,27 @@
 insertTemplate		=	"INSERT INTO {} ({}) VALUES ({})"
 updateTemplate		=	"UPDATE {} SET {}"
 selectTemplate		=	"SELECT {} FROM {}"
-joinTemplate		=	" {} INNER JOIN {} ON"
+joinTemplate		=	" INNER JOIN {} ON {}"
 whereTemplate		=	" WHERE {}"
+sqlMemberTemplate	=	"{obj}.{mem}"
+sqlEqlClauseTemplate=	"{}={}"
+sqlSelectTemplate	=	"SELECT {vars} FROM {tables}"
+sqlWhereTemplate	=	" WHERE {clause}"
+
+def SQLSELECT(vars,tables):
+	return sqlSelectTemplate.format(vars=vars,tables=tables)
+
+def SQLWHERE(clause):
+	return sqlWhereTemplate.format(clause=clause)
+
+def SQLEQL(one,two):
+	return sqlEqlClauseTemplate.format(one,two)
+
+def SQLMEM(obj,mem):
+	return sqlMemberTemplate.format(obj=obj,mem=mem)
+
+def JOIN(tableName1,tableName2,todisp,clause):
+	return selectTemplate.format(todisp,tableName1)+joinTemplate.format(to,clause)
 
 def getEqualList(varList):
 	el=[]
