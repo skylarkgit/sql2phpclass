@@ -5,7 +5,7 @@ from sql.sqlTemplates import *
 from phpBuilds.phpTemplates import *
 from phpBuilds.phpSupport import *
 from lib.fileOps import *
-
+from sql.sqlBuilder import *
 def is_empty(struct):
 	if struct:
 		return False
@@ -77,6 +77,15 @@ def getSelectLocalByIdFunction(tableSurface):
 	str+="$retObj"+"="+fetchObj
 	str+=returnSuccess
 	return FUNCTION("getLocalById",getArgs(varList),str)
+
+def getSelectAllGlobalFunction(tables,tableSurface):
+	tableName=tableSurface.name
+	str='$this->setdb($db);\n'
+	str+=PREPARE(getJoinQuery(tables,tableSurface))
+	str+=EXEC(tableName+" : SELECT ALL GLOBAL")
+	str+="$retObj"+"="+fetchAll
+	str+=returnSuccess
+	return FUNCTION("getAllGlobal",'$db',str)
 
 def getSelectByIdFunction(tableSurface):
 	tableName=tableSurface.name
@@ -190,6 +199,7 @@ def createPHPClasses(tableSurfaces):
 		str+=getSelectLocalByIdFunction(tableSurfaces[a])
 		str+=getUpdateByIdFunction(tableSurfaces[a])
 		str+=getPostArgsFunction(tableSurfaces[a])
+		str+=getSelectAllGlobalFunction(tableSurfaces,tableSurfaces[a])
 		phpStr+=CLASS(a+" extends dbconn",str)
 	writePHP("php/classes.php",phpStr)
 
@@ -220,6 +230,8 @@ def createGetFunctions(tableSurfaces):
     phpStr+=CLASS("Get",fncs)
     writePHP("php/get.php",phpStr)
 
+#--------------------------------------------APIs-------------------------------------------------
+
 def createAddAPI(tableSurfaces):
 	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")
 	code=""
@@ -241,3 +253,15 @@ def createSelectAPI(tableSurfaces):
 	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
 	code+=getTransactionBody('db','res',VAR('res')+"="+"SelectAPI($db,$functionName);\n")
 	writePHP('php/selectAPI.php',code)
+
+
+def createGetAPI(tableSurfaces):
+	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")
+	code=""
+	for table in tableSurfaces.values():
+		code+=getAPIcase('GET',table)
+	code=SWITCH(VAR('functionName'),code)+INVALID('functionName')
+	code=phpStr+FUNCTION('GetAPI','$db,$functionName',code)
+	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
+	code+=getTransactionBody('db','res',VAR('res')+"="+"GetAPI($db,$functionName);\n")
+	writePHP('php/getAPI.php',code)

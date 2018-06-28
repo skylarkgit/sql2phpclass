@@ -21,8 +21,6 @@ touchd('php')
 touchd('htmlTemplates')
 touchd('js')
 
-print(getJoinQuery(tableSurfaces,tableSurfaces['patients']))
-sys.exit()
 #CLASSES.php
 createPHPClasses(tableSurfaces)
 #ADD.php
@@ -31,8 +29,10 @@ createAddAPI(tableSurfaces)
 #GET.php
 createGetFunctions(tableSurfaces)
 createSelectAPI(tableSurfaces)
+createGetAPI(tableSurfaces)
 #UPDATE.php
 createUpdateFunctions(tableSurfaces)
+
 #ADD.tpl
 createHTMLTemplates(tableSurfaces)
 #controllers.js

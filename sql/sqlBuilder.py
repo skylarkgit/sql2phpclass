@@ -19,7 +19,7 @@ def getJoinQuery(tables,tableSurface):
     allTables=getAllOTOLinkedTables(tables,tableSurface,[])
     varsStr=','.join(SQLMEM(v.tableName,v.name)+" as "+v.alias for v in varList.values())
     allTalbesStr=','.join(allTables)
-    pp = pprint.PrettyPrinter(indent=4)
+    #pp = pprint.PrettyPrinter(indent=4)
     #pp.pprint(allLinks)
     NVstr=' AND '.join(SQLEQL(SQLMEM(n['tableName'],n['via']),SQLMEM(n['parent'],n['via'])) for n in allLinks.values())
     return SQLSELECT(varsStr,allTalbesStr)+SQLWHERE(NVstr)

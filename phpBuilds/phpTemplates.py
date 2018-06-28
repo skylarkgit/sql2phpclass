@@ -44,7 +44,7 @@ validateTemplate	=	"validate({},'{}')"
 apiCallsTemplates	=	{
 'ADD': 'return Add::{tableName}($db);',
 'UPDATE': 'return Update::{tableName}($db,{vars});',
-'GET': 'return Get::{tableName}($db,{vars});',
+'GET': '$obj=new {tableName}();return $obj->getAllGlobal($db);',
 'SELECT': '$obj=new {tableName}();return $obj->getAllLocal($db);',
 }
 

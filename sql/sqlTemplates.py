@@ -12,6 +12,7 @@ def SQLSELECT(vars,tables):
 	return sqlSelectTemplate.format(vars=vars,tables=tables)
 
 def SQLWHERE(clause):
+	if(clause==''): return clause
 	return sqlWhereTemplate.format(clause=clause)
 
 def SQLEQL(one,two):
