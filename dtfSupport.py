@@ -9,6 +9,26 @@ def getAllVars(tables,tableSurface,NV={}):
             NV[v.name]=v
     return NV
 
+
+def getAllSettables(tables,tableSurface,NV={}):
+    varList=tableSurface.getSettable()
+    for v in varList.values():
+        if v.isKey and v.keyType=="FOR" and v.relationType=="OTO":
+            NV=getAllSettables(tables,tables[v.keyReference],NV)
+        else:
+            NV[v.name]=v
+    return NV
+
+
+def getAllReal(tables,tableSurface,NV={}):
+    varList=tableSurface.getVars()
+    for v in varList.values():
+        if v.isKey and v.keyType=="FOR" and v.relationType=="OTO":
+            NV=getAllReal(tables,tables[v.keyReference],NV)
+        elif not v.isKey:
+            NV[v.name]=v
+    return NV
+
 def getAllOTOLinks(tables,tableSurface,NV={}):
     varList=tableSurface.getForiegnOTOKeys()
     for v in varList.values():

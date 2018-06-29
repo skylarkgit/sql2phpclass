@@ -4,6 +4,7 @@ from htmlBuilds.htmlTemplates import *
 from htmlBuilds.mytemplate import *
 from htmlBuilds.htmlSupport import *
 from lib.fileOps import *
+from dtfSupport import *
 import bs4
 import html
 table=None
@@ -28,17 +29,30 @@ def getHTMLAllAdd(ownerTableSurface,tableSurface=None):
     code=HEADING(tableSurface.alias,code1)+code2
     return code
 
+def getHTMLShowTable(tables,tableSurface):
+    varList=getAllReal(tables,tableSurface,{})
+    headings=''.join(ITAG('th',v.alias.title()) for v in varList.values())
+    data=''.join(ITAG('td',TABLEDATA(tableSurface,v)) for v in varList.values())
+    code=DATATABLE(tableSurface,headings,data)
+    return code
+
 def buildHTMLAddTemplate(tableSurface):
     code=getHTMLAllAdd(tableSurface)+SUBMIT('add',tableSurface)
     return wrapForm(getFormBodyCode(tableSurface,code))
+
+def buildHTMLShowTemplate(tables,tableSurface):
+    code=getHTMLShowTable(tables,tableSurface)
+    return TAG('div',code,"class='archonShowTable' ng-controller='show"+tableSurface.alias+"Controller'")
 
 def createHTMLTemplates(tables):
     global table
     table=tables
     touchd('htmlTemplates')
     for t in table:
-        print(t)
-    for t in table:
         f=open("htmlTemplates/add"+table[t].alias+".html.tpl",'w')
         f.write(html.unescape(bs4.BeautifulSoup(buildHTMLAddTemplate(table[t]), "html5lib").prettify()))
+        f.close()
+    for t in table:
+        f=open("htmlTemplates/show"+table[t].alias+".html.tpl",'w')
+        f.write(html.unescape(bs4.BeautifulSoup(buildHTMLShowTemplate(tables,table[t]), "html5lib").prettify()))
         f.close()

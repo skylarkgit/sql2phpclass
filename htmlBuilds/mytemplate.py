@@ -1,3 +1,9 @@
+tableTemplate       =\
+'<table ng-if="{tableName}Data.length" class="table table-striped table-bordered" ui-jq="dataTable">\
+<thead><tr>{headings}</tr></thead>\
+<tbody><tr ng-repeat="{tableName}Var in {tableName}Data">{data}</tr></tbody>\
+</table>'
+tableDataTemplate   =   "{{{{{tableName}Var.{col}}}}}"
 inputTemplates={
 'string':
 '<md-input-container class="md-block" flex-gt-sm>\
@@ -163,6 +169,14 @@ def CONTENT(code,theme="altTheme"):
 def SUBMIT(func,tableSurface):
     tableName=tableSurface.alias
     return inputTemplates['submit'].format(form=func+tableName+"Form")
+
+def TABLEDATA(tableSurface,var):
+    tableName=tableSurface.alias
+    return tableDataTemplate.format(tableName=tableName,col=var.alias)
+
+def DATATABLE(tableSurface,headings,data):
+    tableName=tableSurface.alias
+    return tableTemplate.format(tableName=tableName,headings=headings,data=data)
 
 formBodyTemplate=\
 '<form ng-submit="{submit}" name="{form}" method="{method}" ng-controller="{controller}" class="archonFormBody">\
