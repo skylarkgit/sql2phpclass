@@ -42,7 +42,7 @@ def buildHTMLAddTemplate(tableSurface):
 
 def buildHTMLShowTemplate(tables,tableSurface):
     code=getHTMLShowTable(tables,tableSurface)
-    return TAG('div',code,"class='archonShowTable' ng-controller='show"+tableSurface.alias+"Controller'")
+    return TAG('div',code,"class='archonShowTable'")
 
 def createHTMLTemplates(tables):
     global table

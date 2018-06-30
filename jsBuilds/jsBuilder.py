@@ -56,10 +56,16 @@ def buildControllers(tableSurfaces):
 	global tables
 	tables=tableSurfaces
 	code=""
+	pc=""
 	touchd('js')
+
 	for t in tables.values():
 		code+=createAddController(t)
-	f=open('js\controllers.js','w')
+		pc+=CASE("'"+CONTROLLERNAME('add',t.alias)+"'",'return '+CONTROLLERNAME('add',t.alias)+';')
 	for t in tables.values():
 		code+=buildShowController(t)
-	f.write(jsbeautifier.beautify(code))
+		pc+=CASE("'"+CONTROLLERNAME('show',t.alias)+"'",'return '+CONTROLLERNAME('show',t.alias)+';')
+	pc=SWITCH('ctrl',pc)
+	pc='obj.controllerProvider=function(ctrl){{{code}}}'.format(code=pc)
+	f=open('js\controllers.js','w')
+	f.write(jsbeautifier.beautify(pc+code))

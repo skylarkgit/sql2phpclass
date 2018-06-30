@@ -132,7 +132,7 @@ inputTemplates={
             <md-option value="{{{{{model}Var.{model}}}}}" ng-repeat="{model}Var in {model}Select | filter:searchTerm{model}">{{{{{model}Var.{model}}}}}</md-option>\
         </md-optgroup>\
     </md-select>\
-    <md-button title="Add some" aria-label="{label}" class="md-icon-button launch md-primary md-raised" ng-click="showAdvanced($event,\'htmlTemplates\\\\add{reference}.html.tpl\')">\
+    <md-button title="Add some" aria-label="{label}" class="md-icon-button launch md-primary md-raised" ng-click="showAdvanced($event,\'htmlTemplates\\\\add{reference}.html.tpl\',{{}},\'{referenceController}\')">\
         <md-icon md-font-icon="fa fa-plus-circle"></md-icon>\
     </md-button>\
 </md-input-container>',
@@ -179,7 +179,7 @@ def DATATABLE(tableSurface,headings,data):
     return tableTemplate.format(tableName=tableName,headings=headings,data=data)
 
 formBodyTemplate=\
-'<form ng-submit="{submit}" name="{form}" method="{method}" ng-controller="{controller}" class="archonFormBody">\
+'<form ng-submit="{submit}" name="{form}" method="{method}" class="archonFormBody">\
 {code}\
 </form>'
 onsubmit="submission()"
@@ -198,4 +198,4 @@ def getFormBodyCode(tableSurface,filler,func='add',tmethod="POST"):
 
 def getForeignAdd(tableSurface,column,referenceTable):
     tableName=tableSurface.name
-    return inputTemplates['foreign'].format(model=column.alias,controller="add"+tableName+"Controller",label=column.alias.title(),form=tableName+"Form",id=tableName+column.alias+'ID',name=tableName+column.alias,extensions='',reference=referenceTable.alias)
+    return inputTemplates['foreign'].format(model=column.alias,controller="add"+tableName+"Controller",label=column.alias.title(),form=tableName+"Form",id=tableName+column.alias+'ID',name=tableName+column.alias,extensions='',reference=referenceTable.alias,referenceController='add'+referenceTable.alias+'Controller')

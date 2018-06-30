@@ -43,7 +43,7 @@ switchTemplate		=	"switch({var}){{\n{code}}}\n"
 validateTemplate	=	"validate({},'{}')"
 apiCallsTemplates	=	{
 'ADD': 'return Add::{tableName}($db);',
-'UPDATE': 'return Update::{tableName}($db,{vars});',
+'UPDATE': 'return Update::{tableName}($db);',
 'GET': '$obj=new {tableName}();return $obj->getAllGlobal($db);',
 'SELECT': '$obj=new {tableName}();return $obj->getAllLocal($db);',
 }

@@ -1,7 +1,7 @@
 archonAPIcallTemplate   =   'archonAPI.call("{type}","{fname}","{args}").then(function(response){{{code}}});'
 callendTemplate         =   '{fname}({args});\n'
 callTemplate            =   '{fname}({args})'
-controllerTemplate      =   'controller("{name}",function({dependencies}){{\n{code}\n}});\n'
+controllerTemplate      =   'controller("{name}",{name});function {name}({dependencies}){{\n{code}\n}}\n'
 controllerNameTemplate  =   '{func}{table}Controller'
 fetchServiceTemplate    =   'FetchService.get("{name}").then(function(response){{\n{code}\n}})'
 functionTemplate        =   'function({args}){{\n{code}\n}}\n'
@@ -13,11 +13,19 @@ scopeTemplate           =   '$scope.{obj}'
 statementTemplate       =   '{statement};\n'
 submissionTemplate      =   '$scope.submission=function(){{\nvar args={code};\narchonAPI.call({type},{fname},args).then(function(response){{{todo}}});\n}}\n'
 validityTemplate        =   'checkValidity=function(){{\nreturn {toCheck}.$invalid;\n}}\n'
+switchTemplate          =   'switch({expression}){{{code}}}'
+caseTemplate            =   'case {case}: {code} break;'
 parserTemplates={
 'date':
 '$filter("date")({var}, "yyyy-MM-dd")',
 'default':'{var}'
 }
+
+def SWITCH(expression,code):
+    return switchTemplate.format(expression=expression,code=code)
+
+def CASE(case,code):
+    return caseTemplate.format(case=case,code=code)
 
 def PARSER(type,var):
     if type in parserTemplates:

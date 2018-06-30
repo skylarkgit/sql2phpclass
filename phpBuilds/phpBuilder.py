@@ -176,7 +176,7 @@ def getUpdateAllFunction(tableSurface):
 		if varList[v].relationType=='OTO':
 			str+=getForiegnUpdate(varList[v])
 	str+=getUpdate(tableSurface)
-	str+=returnSuccess
+	str+="return $retObj;\n"
 	return FUNCTION(tableName,"$db",str)
 
 def getSelectAllLocalFunction(tableSurface):
@@ -243,6 +243,17 @@ def createAddAPI(tableSurfaces):
 	code+=getTransactionBody('db','res',VAR('res')+"="+"AddAPI($db,$functionName);\n")
 	writePHP('php/addAPI.php',code)
 
+def createUpdateAPI(tableSurfaces):
+	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")+REQUIRE_ONCE("update.php")
+	code=""
+	for table in tableSurfaces.values():
+		code+=getAPIcase('UPDATE',table)
+	code=SWITCH(VAR('functionName'),code)+INVALID('functionName')
+	code=phpStr+FUNCTION('UpdateAPI','$db,$functionName',code)
+	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
+	code+=getTransactionBody('db','res',VAR('res')+"="+"UpdateAPI($db,$functionName);\n")
+	writePHP('php/updateAPI.php',code)
+
 def createSelectAPI(tableSurfaces):
 	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")
 	code=""
@@ -253,7 +264,6 @@ def createSelectAPI(tableSurfaces):
 	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
 	code+=getTransactionBody('db','res',VAR('res')+"="+"SelectAPI($db,$functionName);\n")
 	writePHP('php/selectAPI.php',code)
-
 
 def createGetAPI(tableSurfaces):
 	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")
