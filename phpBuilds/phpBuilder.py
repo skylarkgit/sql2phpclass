@@ -87,6 +87,17 @@ def getSelectAllGlobalFunction(tables,tableSurface):
 	str+=returnSuccess
 	return FUNCTION("getAllGlobal",'$db',str)
 
+def getSelectByIdGlobalFunction(tables,tableSurface):
+	tableName=tableSurface.name
+	keys=tableSurface.getKeys()
+	str=getVarDependencies(keys)
+	str+=PREPARE(getJoinByIdQuery(tables,tableSurface))
+	str+=getBindings(keys)
+	str+=EXEC(tableName+" : SELECT BY ID GLOBAL")
+	str+="$retObj"+"="+fetchObj
+	str+=returnSuccess
+	return FUNCTION("getByIdGlobal",'$db',str)
+
 def getSelectByIdFunction(tableSurface):
 	tableName=tableSurface.name
 	varList=tableSurface.getKeys()
@@ -200,6 +211,7 @@ def createPHPClasses(tableSurfaces):
 		str+=getUpdateByIdFunction(tableSurfaces[a])
 		str+=getPostArgsFunction(tableSurfaces[a])
 		str+=getSelectAllGlobalFunction(tableSurfaces,tableSurfaces[a])
+		str+=getSelectByIdGlobalFunction(tableSurfaces,tableSurfaces[a])
 		phpStr+=CLASS(a+" extends dbconn",str)
 	writePHP("php/classes.php",phpStr)
 
@@ -275,3 +287,14 @@ def createGetAPI(tableSurfaces):
 	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
 	code+=getTransactionBody('db','res',VAR('res')+"="+"GetAPI($db,$functionName);\n")
 	writePHP('php/getAPI.php',code)
+
+def createFetchAPI(tableSurfaces):
+	phpStr=REQUIRE_ONCE("dbconn.php")+REQUIRE_ONCE("toolbag.php")+REQUIRE_ONCE("classes.php")+REQUIRE_ONCE("add.php")+REQUIRE_ONCE("auth.php")
+	code=""
+	for table in tableSurfaces.values():
+		code+=getAPIcase('FETCH',table)
+	code=SWITCH(VAR('functionName'),code)+INVALID('functionName')
+	code=phpStr+FUNCTION('FetchAPI','$db,$functionName',code)
+	code+=getVarDependency('functionName',INVALIDRESPONSE(VAR('res'),'functionName')+ECHO(GETRESPONSE(VAR('res')))+DIE())
+	code+=getTransactionBody('db','res',VAR('res')+"="+"FetchAPI($db,$functionName);\n")
+	writePHP('php/fetchAPI.php',code)

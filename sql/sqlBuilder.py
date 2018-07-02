@@ -23,3 +23,18 @@ def getJoinQuery(tables,tableSurface):
     #pp.pprint(allLinks)
     NVstr=' AND '.join(SQLEQL(SQLMEM(n['tableName'],n['via']),SQLMEM(n['parent'],n['via'])) for n in allLinks.values())
     return SQLSELECT(varsStr,allTalbesStr)+SQLWHERE(NVstr)
+
+def getJoinByIdQuery(tables,tableSurface):
+    keys=tableSurface.getKeys()
+    varList=getAllVars(tables,tableSurface,{})
+    allLinks=getAllOTOLinks(tables,tableSurface,{})
+    allTables=getAllOTOLinkedTables(tables,tableSurface,[])
+    varsStr=','.join(SQLMEM(v.tableName,v.name)+" as "+v.alias for v in varList.values())
+    allTalbesStr=','.join(allTables)
+    #pp = pprint.PrettyPrinter(indent=4)
+    #pp.pprint(allLinks)
+    NVstr=[keys]
+    NVstr=(' AND '.join(SQLEQL(SQLMEM(n['tableName'],n['via']),SQLMEM(n['parent'],n['via'])) for n in allLinks.values()))
+
+    NVstr=SQLAND(' AND '.join(SQLEQL(SQLMEM(tableSurface.name,k.name),':'+k.alias) for k in keys.values()),NVstr)
+    return SQLSELECT(varsStr,allTalbesStr)+SQLWHERE(NVstr)

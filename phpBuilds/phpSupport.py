@@ -6,10 +6,10 @@ from dtfParser import *
 from sql.sqlTemplates import *
 
 def getValidate(var):
-	return VALIDATE(THIS(var.name),var.validType)
+	return VALIDATE(THIS(var.alias),var.validType)
 
 def getSanitize(var):
-	return SANITIZE(THIS(var.name),var.validType)
+	return SANITIZE(THIS(var.alias),var.validType)
 
 def getValidations(varlist):
 	str=""
@@ -18,29 +18,29 @@ def getValidations(varlist):
 		if (d.lenConstraint==True):
 			cond+=" || "+ISEQUAL(lenCheck(d),"false")
 		str+=IF(cond,INVALID(d.alias))
-		str+=THIS(d.name)+"="+getSanitize(d)
+		str+=THIS(d.alias)+"="+getSanitize(d)
 	return str
 
 def lenCheck(var):
-	return LENCHECK(THIS(var.name),var.minLen,var.maxLen)
+	return LENCHECK(THIS(var.alias),var.minLen,var.maxLen)
 
 def getArgsToLocal(varList):
 	str=""
-	for d in varList:
-		str+=(THIS(d)+"="+VAR(d)+";")
+	for d in varList.values():
+		str+=(THIS(d.alias)+"="+VAR(d.alias)+";")
 	return str+"\n"
 
 def localizeAliases(varList):
 	str=""
 	for d in varList.values():
-		str+=("if (isset($_POST['"+d.alias+"'])) $this->"+d.name+"=$_POST['"+d.alias+"'];")
-		str+=("else $this->"+d.name+"=NULL;\n")
+		str+=("if (isset($_POST['"+d.alias+"'])) $this->"+d.alias+"=$_POST['"+d.alias+"'];")
+		str+=("else $this->"+d.alias+"=NULL;\n")
 	return str
 
 def getBindings(paramList):
 	bindings="";
-	for p in paramList:
-		bindings+=BIND(p,"this->"+p)
+	for p in paramList.values():
+		bindings+=BIND(p.alias,"this->"+p.alias)
 	return bindings
 
 def getDeclarations(tableSurface):
@@ -65,6 +65,12 @@ def writePHP(fname,code):
 
 def getVarDependency(varName,elsecase):
 	return IF(ISSET(POST(varName)),VAR(varName)+"="+POST(varName)+";\n")+ELSE(elsecase)
+
+def getVarDependencies(varList):
+	code=""
+	for v in varList.values():
+		code+=IF(ISSET(POST(v.alias)),VAR(v.alias)+"="+POST(v.alias)+";\n")+ELSE(INVALIDRESPONSE(VAR('res'),v.alias)+ECHO(GETRESPONSE(VAR('res')))+DIE())
+	return code
 
 def APICALLS(type,tableSurface):
 	tableName=tableSurface.alias

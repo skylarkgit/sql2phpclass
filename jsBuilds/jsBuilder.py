@@ -52,6 +52,15 @@ def buildShowController(tableSurface):
 	code+=getShowService(tableSurface)
 	return OBJ('app',CONTROLLER(CONTROLLERNAME('show',tableName),DEPENDENCIES,code))
 
+def buildUpdateController(tableSurface):
+	tableName=tableSurface.alias
+	varList=tableSurface.getSettable()
+	code=SCOPE(VALIDITY(SCOPE('update'+tableName+'Controller')))
+	code+=SCOPE('showAdvanced')+'=ToolBag.showAdvanced;\n'
+	code+=getSelectServices(tableSurface)
+	code+=getSubmission(tableSurface)
+	return OBJ('app',CONTROLLER(CONTROLLERNAME('update',tableName),DEPENDENCIES,code))
+
 def buildControllers(tableSurfaces):
 	global tables
 	tables=tableSurfaces

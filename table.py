@@ -33,6 +33,7 @@ createGetFunctions(tableSurfaces)
 createSelectAPI(tableSurfaces)
 createGetAPI(tableSurfaces)
 createUpdateAPI(tableSurfaces)
+createFetchAPI(tableSurfaces)
 
 #UPDATE.php
 createUpdateFunctions(tableSurfaces)

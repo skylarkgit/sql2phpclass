@@ -46,6 +46,7 @@ apiCallsTemplates	=	{
 'UPDATE': 'return Update::{tableName}($db);',
 'GET': '$obj=new {tableName}();return $obj->getAllGlobal($db);',
 'SELECT': '$obj=new {tableName}();return $obj->getAllLocal($db);',
+'FETCH': '$obj=new {tableName}();return $obj->getByIdGlobal($db);'
 }
 
 def ELSE(code):

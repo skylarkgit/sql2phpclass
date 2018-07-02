@@ -7,6 +7,12 @@ sqlMemberTemplate	=	"{obj}.{mem}"
 sqlEqlClauseTemplate=	"{}={}"
 sqlSelectTemplate	=	"SELECT {vars} FROM {tables}"
 sqlWhereTemplate	=	" WHERE {clause}"
+sqlAndTemplate		=	" {code1} AND {code2}"
+
+def SQLAND(code1,code2):
+	if code1=='': return code2
+	if code2=='': return code1
+	return sqlAndTemplate.format(code1=code1,code2=code2)
 
 def SQLSELECT(vars,tables):
 	return sqlSelectTemplate.format(vars=vars,tables=tables)
