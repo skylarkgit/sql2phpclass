@@ -90,7 +90,8 @@ def getSelectAllGlobalFunction(tables,tableSurface):
 def getSelectByIdGlobalFunction(tables,tableSurface):
 	tableName=tableSurface.name
 	keys=tableSurface.getKeys()
-	str=getVarDependencies(keys)
+	str=THIS(SETDB(VAR('db')))
+	str+=getVarDependenciesToLocal(keys)
 	str+=PREPARE(getJoinByIdQuery(tables,tableSurface))
 	str+=getBindings(keys)
 	str+=EXEC(tableName+" : SELECT BY ID GLOBAL")

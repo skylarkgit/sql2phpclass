@@ -66,10 +66,10 @@ def writePHP(fname,code):
 def getVarDependency(varName,elsecase):
 	return IF(ISSET(POST(varName)),VAR(varName)+"="+POST(varName)+";\n")+ELSE(elsecase)
 
-def getVarDependencies(varList):
+def getVarDependenciesToLocal(varList):
 	code=""
 	for v in varList.values():
-		code+=IF(ISSET(POST(v.alias)),VAR(v.alias)+"="+POST(v.alias)+";\n")+ELSE(INVALIDRESPONSE(VAR('res'),v.alias)+ECHO(GETRESPONSE(VAR('res')))+DIE())
+		code+=IF(ISSET(POST(v.alias)),THIS(v.alias)+"="+POST(v.alias)+";\n")+ELSE(INVALIDRESPONSE(VAR('res'),v.alias)+ECHO(GETRESPONSE(VAR('res')))+DIE())
 	return code
 
 def APICALLS(type,tableSurface):

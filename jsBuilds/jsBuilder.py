@@ -37,6 +37,21 @@ def getSubmission(tableSurface):
 	code=SUBMISSION('"add"',CALL('ToolBag.objToCallArgs',createObjFromScope(NV)),"'"+tableSurface.alias+"'",POSTSUBMISSION(ONSUCCESS('"Data Saved"'),ONFAILURE('response.data.data')))
 	return code
 
+def getUpdation(tableSurface):
+	#code="var obj={"+createObjFromScope(tableSurface.getSettable())+"};\n"
+	NV=getAllSettables(tables,tableSurface,{})
+	print(",".join(NV))
+	code=SUBMISSION('"update"',CALL('ToolBag.objToCallArgs',createObjFromScope(NV)),"'"+tableSurface.alias+"'",POSTSUBMISSION(ONSUCCESS('"Data Saved"'),ONFAILURE('response.data.data')))
+	return code
+
+def getFetchById(tableSurface):
+	#code="var obj={"+createObjFromScope(tableSurface.getSettable())+"};\n"
+	NV=getAllSettables(tables,tableSurface,{})
+	keys=tableSurface.getKeys()
+	print(",".join(NV))
+	code=SUBMISSION('"fetch"',CALL('ToolBag.objToCallArgs',createObjFromScope(keys)),"'"+tableSurface.alias+"'",POSTSUBMISSION('',ONFAILURE('response.data.data')))
+	return code
+
 def createAddController(tableSurface):
 	tableName=tableSurface.alias
 	varList=tableSurface.getSettable()
@@ -55,11 +70,12 @@ def buildShowController(tableSurface):
 def buildUpdateController(tableSurface):
 	tableName=tableSurface.alias
 	varList=tableSurface.getSettable()
+	keys=tableSurface.getKeys()
 	code=SCOPE(VALIDITY(SCOPE('update'+tableName+'Controller')))
 	code+=SCOPE('showAdvanced')+'=ToolBag.showAdvanced;\n'
 	code+=getSelectServices(tableSurface)
-	code+=getSubmission(tableSurface)
-	return OBJ('app',CONTROLLER(CONTROLLERNAME('update',tableName),DEPENDENCIES,code))
+	code+=getUpdation(tableSurface)
+	return OBJ('app',CONTROLLER(CONTROLLERNAME('update',tableName),DEPENDENCIES+","+",".join(),code))
 
 def buildControllers(tableSurfaces):
 	global tables
