@@ -14,7 +14,7 @@ def getSelectServices(tableSurface):
 	varList=tableSurface.getForiegnOTMKeys()
 	code=""
 	for v in varList.values():
-		code+=(ARCHONCALL('select',tables[v.keyReference].alias,'',POSTSUBMISSION(SCOPE(v.alias+"Select")+'=response.data.data;',ONFAILURE('"COULDN\'t FETCH DATA FROM '+tableName+' : "+response.data.data'))))
+		code+=(ARCHONCALL('"select"',"'"+tables[v.keyReference].alias+"'",'""',POSTSUBMISSION(SCOPE(v.alias+"Select")+'=response.data.data;',ONFAILURE('"COULDN\'t FETCH DATA FROM '+tableName+' : "+response.data.data'))))
 	varList=tableSurface.getForiegnOTOKeys()
 	for v in varList.values():
 		code+=getSelectServices(tables[v.keyReference])
@@ -23,7 +23,7 @@ def getSelectServices(tableSurface):
 def getShowService(tableSurface):
 	tableName=tableSurface.alias
 	varList=tableSurface.getForiegnOTMKeys()
-	code=ARCHONCALL('Get',tableName,'',POSTSUBMISSION(SCOPE(tableName+"Data")+'=response.data.data;',ONFAILURE('"COULDN\'t FETCH DATA FROM '+tableName+' : "+response.data.data')))
+	code=ARCHONCALL('"Get"',"'"+tableName+"'",'""',POSTSUBMISSION(SCOPE(tableName+"Data")+'=response.data.data;',ONFAILURE('"COULDN\'t FETCH DATA FROM '+tableName+' : "+response.data.data')))
 	return code
 
 def setTables(tableSurfaces):
@@ -39,17 +39,14 @@ def getSubmission(tableSurface):
 
 def getUpdation(tableSurface):
 	#code="var obj={"+createObjFromScope(tableSurface.getSettable())+"};\n"
-	NV=getAllSettables(tables,tableSurface,{})
+	NV=getAllVars(tables,tableSurface,{})
 	print(",".join(NV))
 	code=SUBMISSION('"update"',CALL('ToolBag.objToCallArgs',createObjFromScope(NV)),"'"+tableSurface.alias+"'",POSTSUBMISSION(ONSUCCESS('"Data Saved"'),ONFAILURE('response.data.data')))
 	return code
 
-def getFetchById(tableSurface):
+def getFetchById(tableSurface,obj,code):
 	#code="var obj={"+createObjFromScope(tableSurface.getSettable())+"};\n"
-	NV=getAllSettables(tables,tableSurface,{})
-	keys=tableSurface.getKeys()
-	print(",".join(NV))
-	code=SUBMISSION('"fetch"',CALL('ToolBag.objToCallArgs',createObjFromScope(keys)),"'"+tableSurface.alias+"'",POSTSUBMISSION('',ONFAILURE('response.data.data')))
+	code=ARCHONCALL("'fetch'","'"+tableSurface.alias+"'",CALL('ToolBag.objToCallArgs',createObjFromScope(obj)),POSTSUBMISSION(code,ONFAILURE('response.data.data')))
 	return code
 
 def createAddController(tableSurface):
@@ -67,15 +64,17 @@ def buildShowController(tableSurface):
 	code+=getShowService(tableSurface)
 	return OBJ('app',CONTROLLER(CONTROLLERNAME('show',tableName),DEPENDENCIES,code))
 
-def buildUpdateController(tableSurface):
+def buildUpdateController(tables,tableSurface):
 	tableName=tableSurface.alias
 	varList=tableSurface.getSettable()
 	keys=tableSurface.getKeys()
-	code=SCOPE(VALIDITY(SCOPE('update'+tableName+'Controller')))
+	code=argsToScope(keys)
+	code+=getFetchById(tableSurface,keys,responseToScope(getAllVars(tables,tableSurface,{})))
+	code+=SCOPE(VALIDITY(SCOPE('update'+tableName+'Controller')))
 	code+=SCOPE('showAdvanced')+'=ToolBag.showAdvanced;\n'
 	code+=getSelectServices(tableSurface)
 	code+=getUpdation(tableSurface)
-	return OBJ('app',CONTROLLER(CONTROLLERNAME('update',tableName),DEPENDENCIES+","+",".join(),code))
+	return OBJ('app',CONTROLLER(CONTROLLERNAME('update',tableName),DEPENDENCIES+","+",".join(keys),code))
 
 def buildControllers(tableSurfaces):
 	global tables
@@ -90,6 +89,9 @@ def buildControllers(tableSurfaces):
 	for t in tables.values():
 		code+=buildShowController(t)
 		pc+=CASE("'"+CONTROLLERNAME('show',t.alias)+"'",'return '+CONTROLLERNAME('show',t.alias)+';')
+	for t in tables.values():
+		code+=buildUpdateController(tables,t)
+		pc+=CASE("'"+CONTROLLERNAME('update',t.alias)+"'",'return '+CONTROLLERNAME('update',t.alias)+';')
 	pc=SWITCH('ctrl',pc)
 	pc='obj.controllerProvider=function(ctrl){{{code}}}'.format(code=pc)
 	f=open('js\controllers.js','w')

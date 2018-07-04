@@ -1,4 +1,4 @@
-archonAPIcallTemplate   =   'archonAPI.call("{type}","{fname}","{args}").then(function(response){{{code}}});'
+archonAPIcallTemplate   =   'archonAPI.call({type},{fname},{args}).then(function(response){{{code}}});'
 callendTemplate         =   '{fname}({args});\n'
 callTemplate            =   '{fname}({args})'
 controllerTemplate      =   'controller("{name}",{name});function {name}({dependencies}){{\n{code}\n}}\n'

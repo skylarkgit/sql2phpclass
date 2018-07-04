@@ -62,9 +62,12 @@ def getUpdateByIdFunction(tableSurface):
 	str+=getBindings(varList)
 	str+=getBindings(allSettables)
 	str+=EXEC(tableName+" : UPDATE LOCAL BY ID")
+	str+=PREPARE(getSelectQuery(tableName,varList))
+	str+=getBindings(varList)
+	str+=EXEC(tableName+" : SELECT PRIME")
 	str+="$retObj"+"="+fetchObj
 	str+=returnSuccess
-	return FUNCTION("getUpdateById","",str)
+	return FUNCTION("updateLocalById","",str)
 
 def getSelectLocalByIdFunction(tableSurface):
 	tableName=tableSurface.name

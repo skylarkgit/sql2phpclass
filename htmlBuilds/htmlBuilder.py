@@ -31,8 +31,8 @@ def getHTMLAllAdd(ownerTableSurface,tableSurface=None):
 
 def getHTMLShowTable(tables,tableSurface):
     varList=getAllReal(tables,tableSurface,{})
-    headings=''.join(ITAG('th',v.alias.title()) for v in varList.values())
-    data=''.join(ITAG('td',TABLEDATA(tableSurface,v)) for v in varList.values())
+    headings=''.join(ITAG('th',v.alias.title()) for v in varList.values())+ITAG('th','ACTION')
+    data=''.join(ITAG('td',TABLEDATA(tableSurface,v)) for v in varList.values())+ITAG('td',UPDATEBUTTON(tableSurface))
     code=DATATABLE(tableSurface,headings,data)
     return code
 

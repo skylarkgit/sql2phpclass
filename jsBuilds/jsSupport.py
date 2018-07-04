@@ -21,4 +21,6 @@ def createObjFromScope(varList):
     return '{'+(','.join(v.alias+":"+PARSER(v.validType,SCOPE(v.alias)) for v in varList.values()))+'}'
 
 def responseToScope(varList):
-    return ''.join(SCOPE() for v in varList.values())
+    return ''.join(SCOPE(v.alias)+"=response.data.data."+v.alias+";" for v in varList.values())
+
+def argsToScope(varList):

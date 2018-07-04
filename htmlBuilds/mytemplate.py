@@ -1,3 +1,4 @@
+from jsBuilds.jsTemplates import *
 tableTemplate       =\
 '<table ng-if="{tableName}Data.length" class="table table-striped table-bordered" ui-jq="dataTable">\
 <thead><tr>{headings}</tr></thead>\
@@ -24,7 +25,7 @@ inputTemplates={
 'number':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input type="number" name="{name}" ng-model="{model}" id="{id}" {extensions}/>\
+    <input type="number" name="{name}" string-to-number ng-model="{model}" id="{id}" {extensions}/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -32,7 +33,7 @@ inputTemplates={
 'float':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input type="number" name="{name}" ng-model="{model}" id="{id}"/>\
+    <input type="number" name="{name}" string-to-number ng-model="{model}" id="{id}"/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -40,7 +41,7 @@ inputTemplates={
 'percent':
 '<md-input-container class="md-block" flex-gt-sm>\
     <label>{label}</label>\
-    <input type="number" name="{name}" ng-model="{model}" id="{id}" ng-pattern="/^[0-9]{{2}}+(\.[0-9]{{1,2}})?$/" step="0.01" {extensions}/>\
+    <input type="number" name="{name}" string-to-number ng-model="{model}" id="{id}" ng-pattern="/^[0-9]{{2}}+(\.[0-9]{{1,2}})?$/" step="0.01" {extensions}/>\
       <div ng-messages="{form}.{name}.$touched && {form}.{name}.$error">\
         <div ng-messages-include="validationMessages.html"></div>\
       </div>\
@@ -140,6 +141,10 @@ inputTemplates={
 '<div>\
     <md-button ng-disabled="{form}.$invalid" type="submit" class="md-raised md-primary">Submit</md-button>\
 </div>',
+'button':
+'<md-button title="Edit" class="md-icon-button launch md-primary md-raised" {extensions}>\
+    <md-icon md-font-icon="fa fa-plus-circle"></md-icon>\
+</md-button>',
 'default':
 '<md-input-container>\
     <label>{label}</label>\
@@ -199,3 +204,10 @@ def getFormBodyCode(tableSurface,filler,func='add',tmethod="POST"):
 def getForeignAdd(tableSurface,column,referenceTable):
     tableName=tableSurface.name
     return inputTemplates['foreign'].format(model=column.alias,controller="add"+tableName+"Controller",label=column.alias.title(),form=tableName+"Form",id=tableName+column.alias+'ID',name=tableName+column.alias,extensions='',reference=referenceTable.alias,referenceController='add'+referenceTable.alias+'Controller')
+
+def UPDATEBUTTON(tableSurface):
+    tableName=tableSurface.alias
+    keys=tableSurface.getKeys()
+    obj=','.join(k.alias+":"+tableName+"Var."+k.alias for k in keys.values())
+    onclick='ng-click="showAdvanced($event,\'htmlTemplates\\\\add{reference}.html.tpl\',{{{obj}}},\'{referenceController}\')"'.format(reference=tableName,obj=obj,referenceController=CONTROLLERNAME('update',tableName))
+    return inputTemplates['button'].format(extensions=onclick)
