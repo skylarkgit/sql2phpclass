@@ -24,3 +24,4 @@ def responseToScope(varList):
     return ''.join(SCOPE(v.alias)+"=response.data.data."+v.alias+";" for v in varList.values())
 
 def argsToScope(varList):
+    return ''.join(SCOPE(v.alias)+"="+v.alias+";" for v in varList.values())
